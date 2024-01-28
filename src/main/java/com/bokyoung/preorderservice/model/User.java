@@ -1,14 +1,17 @@
 package com.bokyoung.preorderservice.model;
 
-import com.bokyoung.preorderservice.domain.UserAccount;
+import com.bokyoung.preorderservice.model.entity.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     private Long Id;
     private String email;
@@ -38,5 +41,35 @@ public class User {
                 account.getModifiedAt(),
                 account.getDeletedAt()
         );
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.deletedAt == null;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.deletedAt == null;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.deletedAt == null;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.deletedAt == null;
     }
 }

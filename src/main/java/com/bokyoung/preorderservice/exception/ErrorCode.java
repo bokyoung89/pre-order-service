@@ -11,6 +11,7 @@ public enum ErrorCode {
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "User email is duplicated"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not founded"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Password is invalid"),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "token is invalid"),
 
     INVALID_INPUT_PASSWORD(HttpStatus.BAD_REQUEST, "invalid input password"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR"),
