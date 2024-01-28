@@ -29,6 +29,35 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sbk8689@gmail.com
+    password: qcvy pemp iony egho
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+
+jwt:
+  secret-key: pre-order-service-2024.secret_key
+  # 30 days
+  token.expired-time-ms: 2592000000
+
+file:
+  path: C:\Users\sbk86\
+  url: http://localhost:4000/file/
 
 ---
 spring:
