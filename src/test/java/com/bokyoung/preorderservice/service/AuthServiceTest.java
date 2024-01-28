@@ -7,14 +7,12 @@ import com.bokyoung.preorderservice.repository.UserAccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
@@ -26,10 +24,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Disabled
-public class UserServiceTest {
+public class AuthServiceTest {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @MockBean
     private UserAccountRepository userAccountRepository;
@@ -54,7 +52,7 @@ public class UserServiceTest {
         when(userAccountRepository.save(any())).thenReturn(UserAccountFixture.get(email, password));
 
         //then
-        Assertions.assertDoesNotThrow(() -> userService.join(email, password, nickname, greeting, profile_image, emailVerified));
+        Assertions.assertDoesNotThrow(() -> authService.join(email, password, nickname, greeting, profile_image, emailVerified));
     }
 
     @Test
@@ -75,7 +73,7 @@ public class UserServiceTest {
         when(userAccountRepository.save(any())).thenReturn(Optional.of(fixture));
 
         //then
-        Assertions.assertThrows(PreOrderServiceException.class, () -> userService.join(email, password, nickname, greeting, profile_image, emailVerified));
+        Assertions.assertThrows(PreOrderServiceException.class, () -> authService.join(email, password, nickname, greeting, profile_image, emailVerified));
     }
 
     @Test
@@ -100,7 +98,7 @@ public class UserServiceTest {
         // TODO : mocking
 
         //then
-        Assertions.assertThrows(PreOrderServiceException.class, () -> userService.join(email, password, nickname, greeting, profile_image, emailVerified));
+        Assertions.assertThrows(PreOrderServiceException.class, () -> authService.join(email, password, nickname, greeting, profile_image, emailVerified));
     }
 
 
@@ -144,7 +142,7 @@ public class UserServiceTest {
         when(passwordEncoder.matches(password, fixture.getPassword())).thenReturn(true);
 
         //then
-        Assertions.assertDoesNotThrow(() -> userService.login(email, password));
+        Assertions.assertDoesNotThrow(() -> authService.login(email, password));
     }
 
     @Test
@@ -159,7 +157,7 @@ public class UserServiceTest {
         when(userAccountRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         //then
-        Assertions.assertThrows(PreOrderServiceException.class, () -> userService.login(email, password));
+        Assertions.assertThrows(PreOrderServiceException.class, () -> authService.login(email, password));
     }
 
     @Test
@@ -175,7 +173,7 @@ public class UserServiceTest {
         when(userAccountRepository.findByEmail(email)).thenReturn(Optional.of(fixture));
 
         //then
-        Assertions.assertThrows(PreOrderServiceException.class, () -> userService.login(email, wrongPassword));
+        Assertions.assertThrows(PreOrderServiceException.class, () -> authService.login(email, wrongPassword));
     }
 
 }

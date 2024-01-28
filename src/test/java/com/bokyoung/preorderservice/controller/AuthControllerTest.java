@@ -5,18 +5,15 @@ import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.model.User;
 import com.bokyoung.preorderservice.controller.request.UserJoinRequest;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
-import com.bokyoung.preorderservice.service.UserService;
+import com.bokyoung.preorderservice.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.DisabledIf;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.mock;
@@ -29,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Disabled
-public class UserControllerTest {
+public class AuthControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +35,7 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private UserService userService;
+    private AuthService authService;
 
     @Test
     public void 회원가입_성공() throws Exception {
@@ -51,7 +48,7 @@ public class UserControllerTest {
         Boolean emailVerified = false;
 
         //when
-        when(userService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenReturn(mock(User.class));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenReturn(mock(User.class));
 
         //then
         mockMvc.perform(post("/api/auth/join")
@@ -74,7 +71,7 @@ public class UserControllerTest {
 
         //when
         // TODO : develop
-        when(userService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
 
         //then
         mockMvc.perform(post("/api/auth/join")
@@ -98,7 +95,7 @@ public class UserControllerTest {
 
         //when
         // TODO : develop
-        when(userService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
 
         //then
         mockMvc.perform(post("/api/auth/join")
@@ -122,7 +119,7 @@ public class UserControllerTest {
 
         //when
         // TODO : develop
-        when(userService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
 
         //then
         mockMvc.perform(post("/api/auth/join")
@@ -146,7 +143,7 @@ public class UserControllerTest {
 
         //when
         // TODO : develop
-        when(userService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenThrow(new PreOrderServiceException(ErrorCode.DUPLICATED_EMAIL));
 
         //then
         mockMvc.perform(post("/api/auth/join")
@@ -164,7 +161,7 @@ public class UserControllerTest {
         String password = "password";
 
         //when
-        when(userService.login(email, password)).thenReturn("test_token");
+        when(authService.login(email, password)).thenReturn("test_token");
 
         //then
         mockMvc.perform(post("/api/auth/login")
@@ -182,7 +179,7 @@ public class UserControllerTest {
         String password = "password";
 
         //when
-        when(userService.login(email, password)).thenThrow(new PreOrderServiceException(ErrorCode.USER_NOT_FOUND));
+        when(authService.login(email, password)).thenThrow(new PreOrderServiceException(ErrorCode.USER_NOT_FOUND));
 
         //then
         mockMvc.perform(post("/api/auth/login")
@@ -200,7 +197,7 @@ public class UserControllerTest {
         String password = "password";
 
         //when
-        when(userService.login(email, password)).thenThrow(new PreOrderServiceException(ErrorCode.INVALID_PASSWORD));
+        when(authService.login(email, password)).thenThrow(new PreOrderServiceException(ErrorCode.INVALID_PASSWORD));
 
         //then
         mockMvc.perform(post("/api/auth/login")
