@@ -1,7 +1,6 @@
-package com.bokyoung.preorderservice.domain;
+package com.bokyoung.preorderservice.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
@@ -14,13 +13,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(indexes = {
+@Table(name = "\"user_account\"", indexes = {
         @Index(columnList = "id")
 })
 @EqualsAndHashCode(of = "id")
 @Entity
 @SQLDelete(sql = "UPDATE user_account SET deleted_at = NOW() WHERE id = ?")
-public class UserAccount {
+public class UserAccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,19 +68,28 @@ public class UserAccount {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static UserAccount of(String email, String password, String nickname, String greeting, String profile_image, Boolean emailVerified) {
-        UserAccount userAccount = new UserAccount();
-        userAccount.setEmail(email);
-        userAccount.setPassword(password);
-        userAccount.setNickname(nickname);
-        userAccount.setGreeting(greeting);
-        userAccount.setProfile_image(profile_image);
-        return userAccount;
+    public static UserAccountEntity of(String email, String password, String nickname, String greeting, String profile_image, Boolean emailVerified) {
+        UserAccountEntity userAccountEntity = new UserAccountEntity();
+        userAccountEntity.setEmail(email);
+        userAccountEntity.setPassword(password);
+        userAccountEntity.setNickname(nickname);
+        userAccountEntity.setGreeting(greeting);
+        userAccountEntity.setProfile_image(profile_image);
+        return userAccountEntity;
     }
 
-    public static UserAccount of(String certificationNumber, Boolean emailVerified) {
-        UserAccount userAccount = new UserAccount();
-        userAccount.setCertificationNumber(certificationNumber);
-        return userAccount;
+    public static UserAccountEntity of(String certificationNumber, Boolean emailVerified) {
+        UserAccountEntity userAccountEntity = new UserAccountEntity();
+        userAccountEntity.setCertificationNumber(certificationNumber);
+        return userAccountEntity;
+    }
+
+    public static UserAccountEntity of(String password, String nickname, String greeting, String profile_image) {
+        UserAccountEntity userAccountEntity = new UserAccountEntity();
+        userAccountEntity.setPassword(password);
+        userAccountEntity.setNickname(nickname);
+        userAccountEntity.setGreeting(greeting);
+        userAccountEntity.setProfile_image(profile_image);
+        return userAccountEntity;
     }
 }

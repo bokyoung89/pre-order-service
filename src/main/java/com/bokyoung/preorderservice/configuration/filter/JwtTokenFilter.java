@@ -1,6 +1,6 @@
 package com.bokyoung.preorderservice.configuration.filter;
 
-import com.bokyoung.preorderservice.model.User;
+import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.service.UserService;
 import com.bokyoung.preorderservice.util.JwtTokenUtils;
 import jakarta.servlet.FilterChain;
@@ -46,10 +46,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             };
 
             String email = JwtTokenUtils.getEmail(token, key);
-            User user = userService.loadByUserByEmail(email);
+            UserAccount userAccount = userService.loadByUserByEmail(email);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    user, null, null
+                    userAccount, null, null
             );
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);

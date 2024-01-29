@@ -7,7 +7,7 @@ import com.bokyoung.preorderservice.controller.response.CheckCertificationRespon
 import com.bokyoung.preorderservice.controller.response.Response;
 import com.bokyoung.preorderservice.controller.response.UserJoinResponse;
 import com.bokyoung.preorderservice.controller.response.UserLoginResponse;
-import com.bokyoung.preorderservice.model.User;
+import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +22,8 @@ public class AuthController {
     //TODO : implement
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@RequestBody UserJoinRequest request) {
-        User user = authService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getGreeting(), request.getProfile_image(), request.getEmailVerified());
-        return Response.success(UserJoinResponse.fromUser(user));
+        UserAccount userAccount = authService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getGreeting(), request.getProfile_image(), request.getEmailVerified());
+        return Response.success(UserJoinResponse.fromUser(userAccount));
     }
 
     @PostMapping("/login")

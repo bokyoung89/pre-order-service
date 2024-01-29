@@ -1,6 +1,6 @@
 package com.bokyoung.preorderservice.model;
 
-import com.bokyoung.preorderservice.model.entity.UserAccount;
+import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.Collection;
 
 @Getter
 @AllArgsConstructor
-public class User implements UserDetails {
+public class UserAccount implements UserDetails {
 
     private Long Id;
     private String email;
@@ -26,20 +26,20 @@ public class User implements UserDetails {
     private Timestamp modifiedAt;
     private Timestamp deletedAt;
 
-    public static User fromAccount(UserAccount account) {
-        return new User(
-                account.getId(),
-                account.getEmail(),
-                account.getPassword(),
-                account.getNickname(),
-                account.getGreeting(),
-                account.getProfile_image(),
-                account.isEmailVerified(),
-                account.getEmailCheckToken(),
-                account.getEmailCheckToken(),
-                account.getCreatedAt(),
-                account.getModifiedAt(),
-                account.getDeletedAt()
+    public static UserAccount fromEntity(UserAccountEntity entity) {
+        return new UserAccount(
+                entity.getId(),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getNickname(),
+                entity.getGreeting(),
+                entity.getProfile_image(),
+                entity.isEmailVerified(),
+                entity.getEmailCheckToken(),
+                entity.getEmailCheckToken(),
+                entity.getCreatedAt(),
+                entity.getModifiedAt(),
+                entity.getDeletedAt()
         );
     }
 
