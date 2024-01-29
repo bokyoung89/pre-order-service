@@ -12,13 +12,13 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(indexes = {
+@Table(name = "\"post\"", indexes = {
         @Index(columnList = "id")
 })
 @EqualsAndHashCode(of = "id")
 @Entity
 @SQLDelete(sql = "UPDATE post SET deleted_at = NOW() WHERE id = ?")
-public class Post {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserAccount userAccount;
+    private UserAccountEntity userAccount;
 
     private Timestamp createdAt;
 
@@ -49,8 +49,8 @@ public class Post {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static Post of(String title, String content, UserAccount userEntity) {
-        Post entity = new Post();
+    public static PostEntity of(String title, String content, UserAccountEntity userEntity) {
+        PostEntity entity = new PostEntity();
         entity.setTitle(title);
         entity.setContent(content);
         entity.setUserAccount(userEntity);

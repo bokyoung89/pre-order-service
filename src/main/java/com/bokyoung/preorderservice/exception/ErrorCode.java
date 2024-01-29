@@ -19,7 +19,9 @@ public enum ErrorCode {
     INVALID_EMAIL_TOKEN(HttpStatus.BAD_REQUEST, "mail is invalid"),
 
     DUPLICATE_EMAIL_CHECK_TOKEN(HttpStatus.CONFLICT, "email check token already exists"),
-    INVALID_CERTIFICATION(HttpStatus.UNAUTHORIZED, "certification number is invaild")
+    INVALID_CERTIFICATION(HttpStatus.UNAUTHORIZED, "certification number is invaild"),
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not founded"),
+    INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is invalid")
     ;
 
     private HttpStatus status;
