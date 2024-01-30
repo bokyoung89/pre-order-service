@@ -1,7 +1,9 @@
 package com.bokyoung.preorderservice.controller;
 
+import com.bokyoung.preorderservice.controller.request.PostCommentRequest;
 import com.bokyoung.preorderservice.controller.request.PostCreateReqeust;
 import com.bokyoung.preorderservice.controller.request.PostModifyRequest;
+import com.bokyoung.preorderservice.controller.response.CommentResponse;
 import com.bokyoung.preorderservice.controller.response.PostResponse;
 import com.bokyoung.preorderservice.controller.response.Response;
 import com.bokyoung.preorderservice.model.Post;
@@ -47,13 +49,35 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/likes")
-    public Response<Void> like(@PathVariable(name = "postId") Long postId, Authentication authentication) {
-        postService.like(postId, authentication.getName());
+    public Response<Void> postLike(@PathVariable(name = "postId") Long postId, Authentication authentication) {
+        postService.postLike(postId, authentication.getName());
         return Response.success();
     }
 
     @GetMapping("/{postId}/likes")
-    public Response<Integer> likeCount(@PathVariable(name = "postId") Long postId, Authentication authentication) {
-        return Response.success(postService.likeCount(postId));
+    public Response<Integer> postLikeCount(@PathVariable(name = "postId") Long postId, Authentication authentication) {
+        return Response.success(postService.postLikeCount(postId));
+    }
+
+    @PostMapping("/{postId}/comments")
+    public Response<Void> comment(@PathVariable(name = "postId") Long postId, @RequestBody PostCommentRequest request, Authentication authentication) {
+        postService.comment(postId, authentication.getName(), request.getComment());
+        return Response.success();
+    }
+
+    @GetMapping("/{postId}/comments")
+    public Response<Page<CommentResponse>> comment(@PathVariable(name = "postId") Long postId, Pageable pageable, Authentication authentication) {
+        return Response.success(postService.getComment(postId, pageable).map(CommentResponse::fromComment));
+    }
+
+    @PostMapping("/{postId}/comments/{commentId}/likes")
+    public Response<Void> commentLike(@PathVariable(name = "postId") Long postId, @PathVariable(name = "commentId") Long commentId, Authentication authentication) {
+        postService.commentLike(commentId, authentication.getName());
+        return Response.success();
+    }
+
+    @GetMapping("/{postId}/comments/{commentId}/likes")
+    public Response<Integer> commentLikeCount(@PathVariable(name = "postId") Long postId, @PathVariable(name = "commentId") Long commentId, Authentication authentication) {
+        return Response.success(postService.commentLikeCount(commentId));
     }
 }

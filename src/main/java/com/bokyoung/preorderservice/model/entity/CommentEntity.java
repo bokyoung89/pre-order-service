@@ -12,13 +12,13 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "\"like_post\"", indexes = {
-        @Index(columnList = "id")
+@Table(name = "\"comment\"", indexes = {
+        @Index(name = "post_id_idx", columnList = "post_id")
 })
 @EqualsAndHashCode(of = "id")
 @Entity
-@SQLDelete(sql = "UPDATE like_post SET deleted_at = NOW() WHERE id = ?")
-public class LikePostEntity {
+@SQLDelete(sql = "UPDATE \"comment\" SET deleted_at = NOW() WHERE id = ?")
+public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,9 @@ public class LikePostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserAccountEntity userAccount;
+
+    @Column(name  = "comment")
+    private String comment;
 
     private Timestamp createdAt;
 
@@ -48,10 +51,11 @@ public class LikePostEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static LikePostEntity of(UserAccountEntity userEntity, PostEntity postEntity) {
-        LikePostEntity entity = new LikePostEntity();
+    public static CommentEntity of(UserAccountEntity userEntity, PostEntity postEntity, String comment) {
+        CommentEntity entity = new CommentEntity();
         entity.setUserAccount(userEntity);
         entity.setPost(postEntity);
+        entity.setComment(comment);
         return entity;
     }
 

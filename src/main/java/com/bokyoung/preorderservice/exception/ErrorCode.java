@@ -19,7 +19,9 @@ public enum ErrorCode {
     INVALID_CERTIFICATION(HttpStatus.UNAUTHORIZED, "certification number is invaild"),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Post not founded"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is invalid"),
-    ALREADY_LIKED(HttpStatus.CONFLICT, "User already liked post")
+    ALREADY_LIKED_POST(HttpStatus.CONFLICT, "User already liked post"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not founded"),
+    ALREADY_LIKED_COMMENT(HttpStatus.CONFLICT, "User already liked comment")
     ;
 
     private HttpStatus status;
