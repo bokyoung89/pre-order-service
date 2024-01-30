@@ -21,7 +21,9 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is invalid"),
     ALREADY_LIKED_POST(HttpStatus.CONFLICT, "User already liked post"),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Comment not founded"),
-    ALREADY_LIKED_COMMENT(HttpStatus.CONFLICT, "User already liked comment")
+    ALREADY_LIKED_COMMENT(HttpStatus.CONFLICT, "User already liked comment"),
+    ALREADY_FOLLOW(HttpStatus.CONFLICT, "this user already following"),
+    SELF_FOLLOWING(HttpStatus.BAD_REQUEST, "Cannot follow yourself")
     ;
 
     private HttpStatus status;
