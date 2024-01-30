@@ -2,6 +2,8 @@ package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
+import com.bokyoung.preorderservice.model.AlarmArgs;
+import com.bokyoung.preorderservice.model.AlarmType;
 import com.bokyoung.preorderservice.model.Comment;
 import com.bokyoung.preorderservice.model.Post;
 import com.bokyoung.preorderservice.model.entity.LikePostEntity;
@@ -29,6 +31,7 @@ public class PostService {
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
     private final LikeCommentRepository likeCommentRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public void create(String title, String content, String email) {
@@ -86,6 +89,9 @@ public class PostService {
 
         //like save
         likePostRepository.save(LikePostEntity.of(userAccountEntity, postEntity));
+
+        alarmRepository.save(AlramEntity.of(postEntity.getUserAccount(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userAccountEntity.getId(), postEntity.getId())
+        ));
     }
 
     @Transactional
@@ -107,6 +113,8 @@ public class PostService {
         //comment save
         commentRepository.save(CommentEntity.of(userAccountEntity, postEntity, comment));
 
+        alarmRepository.save(AlramEntity.of(postEntity.getUserAccount(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userAccountEntity.getId(), postEntity.getId())));
+
     }
 
     @Transactional
@@ -121,6 +129,8 @@ public class PostService {
 
         //like save
         likeCommentRepository.save(LikeCommentEntity.of(userAccountEntity, commentEntity));
+
+        alarmRepository.save(AlramEntity.of(commentEntity.getUserAccount(), AlarmType.NEW_LIKE_ON_COMMENT, new AlarmArgs(userAccountEntity.getId(), commentEntity.getId())));
     }
 
     @Transactional

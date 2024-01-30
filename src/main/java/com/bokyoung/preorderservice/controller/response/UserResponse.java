@@ -4,8 +4,6 @@ import com.bokyoung.preorderservice.model.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.sql.Timestamp;
-
 @AllArgsConstructor
 @Getter
 public class UserResponse {
@@ -13,10 +11,10 @@ public class UserResponse {
     private Long Id;
     private String email;
 
-    public static UserResponse fromUser(UserResponse userResponse){
+    public static UserResponse fromUser(UserAccount userAccount){
         return new UserResponse(
-                userResponse.getId(),
-                userResponse.getEmail()
+                userAccount.getId(),
+                userAccount.getEmail()
         );
     }
 }

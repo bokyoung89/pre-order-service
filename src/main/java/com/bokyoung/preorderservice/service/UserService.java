@@ -2,10 +2,14 @@ package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
+import com.bokyoung.preorderservice.model.Alarm;
 import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
+import com.bokyoung.preorderservice.repository.AlarmRepository;
 import com.bokyoung.preorderservice.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserAccountRepository userAccountRepository;
+    private final AlarmRepository alarmRepository;
 
     public UserAccount loadByUserByEmail(String email) {
         return userAccountRepository.findByEmail(email).map(UserAccount::fromEntity).orElseThrow(() ->
@@ -40,5 +45,12 @@ public class UserService {
 
         userAccountEntity = userAccountRepository.save(UserAccountEntity.of(password, nickName, greeting, profile_image));
         return userAccountEntity.getId();
+    }
+
+    public Page<Alarm> alarmList(String email, Pageable pageable) {
+        UserAccountEntity userAccount = userAccountRepository.findByEmail(email).orElseThrow(() ->
+                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", email)));
+
+        return alarmRepository.findAllByUserAccount(userAccount, pageable).map(Alarm::fromEntity);
     }
 }
