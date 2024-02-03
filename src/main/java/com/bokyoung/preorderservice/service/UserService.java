@@ -2,10 +2,10 @@ package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
-import com.bokyoung.preorderservice.model.Alarm;
+import com.bokyoung.preorderservice.model.NewsFeed;
 import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
-import com.bokyoung.preorderservice.repository.AlarmRepository;
+import com.bokyoung.preorderservice.repository.NewsFeedRepository;
 import com.bokyoung.preorderservice.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,19 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserAccountRepository userAccountRepository;
-    private final AlarmRepository alarmRepository;
+    private final NewsFeedRepository newsFeedRepository;
 
     public UserAccount loadByUserByEmail(String email) {
         return userAccountRepository.findByEmail(email).map(UserAccount::fromEntity).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", email)));
     }
 
+    //TODO: modify
     @Transactional
     public Long update(Long id, String password, String nickName, String greeting, String profile_image) {
         UserAccountEntity userAccountEntity = userAccountRepository.findById(id).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", id)));
 
-        if(password != null) {
+        if (password != null) {
             userAccountEntity.setPassword(password);
         }
         if (nickName != null) {
@@ -47,10 +48,10 @@ public class UserService {
         return userAccountEntity.getId();
     }
 
-    public Page<Alarm> alarmList(String email, Pageable pageable) {
+    public Page<NewsFeed> newsFeedsList(String email, Pageable pageable) {
         UserAccountEntity userAccount = userAccountRepository.findByEmail(email).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", email)));
 
-        return alarmRepository.findAllByUserAccount(userAccount, pageable).map(Alarm::fromEntity);
+        return newsFeedRepository.findAllByUserAccount(userAccount, pageable).map(NewsFeed::fromEntity);
     }
 }
