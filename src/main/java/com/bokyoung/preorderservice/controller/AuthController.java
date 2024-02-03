@@ -32,8 +32,8 @@ public class AuthController {
         return Response.success(new UserLoginResponse(token));
     }
 
-    @PostMapping("/check_cerfitication")
-    public Response<CheckCertificationResponse> CheckCertification(@RequestBody CheckCertificationRequest request) {
+    @PostMapping("/checkCerfitication")
+    public Response<CheckCertificationResponse> checkCertification(@RequestBody CheckCertificationRequest request) {
         Boolean emailVerified = authService.checkCertification(request.getEmail(), request.getCertificationNumber());
         return Response.success(new CheckCertificationResponse(emailVerified));
     }

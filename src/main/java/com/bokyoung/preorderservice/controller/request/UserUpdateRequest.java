@@ -15,9 +15,12 @@ public class UserUpdateRequest {
     private String nickName;
 
     @NotBlank
-    private  String greeting;
+    private String greeting;
 
     @NotBlank
     private String profile_image;
+
+    public UserUpdateRequest() {
+    }
 
 }

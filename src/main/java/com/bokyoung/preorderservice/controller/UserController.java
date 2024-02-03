@@ -1,7 +1,7 @@
 package com.bokyoung.preorderservice.controller;
 
 import com.bokyoung.preorderservice.controller.request.UserUpdateRequest;
-import com.bokyoung.preorderservice.controller.response.AlarmResponse;
+import com.bokyoung.preorderservice.controller.response.NewsFeedResponse;
 import com.bokyoung.preorderservice.controller.response.Response;
 import com.bokyoung.preorderservice.controller.response.UserUpdateResponse;
 import com.bokyoung.preorderservice.service.UserService;
@@ -18,17 +18,29 @@ public class UserController {
 
     private final UserService userService;
 
-    @PutMapping("/{id}")
-    public Response<UserUpdateResponse> updateUser
+    @PutMapping("/profile/{id}")
+    public Response<UserUpdateResponse> UpdateProfile
             (@PathVariable("id") Long id,
              @RequestBody UserUpdateRequest request) {
         userService.update(id, request.getPassword(), request.getNickName(), request.getGreeting(), request.getProfile_image());
         return Response.success(new UserUpdateResponse(id));
     }
 
-    @GetMapping("/alarm")
-    public Response<Page<AlarmResponse>> alarm(Pageable pageable, Authentication authentication) {
-        return Response.success(userService.alarmList(authentication.getName(), pageable).map(AlarmResponse::fromAlarm));
+    //TODO : implement
+    @PutMapping("/password/{id}")
+    public Response<Void> UpdatePassword() {
+        return Response.success();
+    }
+
+    //TODO : implement
+    @GetMapping("/{id}")
+    public Response<Void> getProfile() {
+        return Response.success();
+    }
+
+    @GetMapping("/newsFeed")
+    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, Authentication authentication) {
+        return Response.success(userService.newsFeedsList(authentication.getName(), pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 
 }

@@ -35,7 +35,7 @@ public class AuthenticationConfig {
                         .requestMatchers(HttpMethod.POST,
                                 "/api/auth/join",
                                 "/api/auth/login",
-                                "/api/auth/check_cerfitication",
+                                "/api/auth/checkCerfitication",
                                 "/file/upload")
                         .permitAll()
                         .requestMatchers("/api/**").authenticated()
