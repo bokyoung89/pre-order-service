@@ -8,9 +8,8 @@ services:
     image: sbk8689/pre-order-service-mysql
     environment:
       - MYSQL_DATABASE=pre-order-service-mysql
-      - MYSQL_ROOT_PASSWORD=${SPRING_DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     volumes:
       - ./database/config:/etc/mysql/conf.d
     ports:
       - "3306:3306"
-
