@@ -1,8 +1,8 @@
 package com.bokyoung.preorderservice.service;
 
-import com.bokyoung.preorderservice.domain.UserAccount;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
 import com.bokyoung.preorderservice.fixture.UserAccountFixture;
+import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
 import com.bokyoung.preorderservice.repository.UserAccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -64,7 +64,7 @@ public class AuthServiceTest {
         String greeting = "안녕하세요!";
         String profile_image = "";
         Boolean emailVerified = false;
-        UserAccount fixture = UserAccountFixture.get(email, password);
+        UserAccountEntity fixture = UserAccountFixture.get(email, password);
 
         //when
         //mocking
@@ -135,7 +135,7 @@ public class AuthServiceTest {
         //given
         String email = "username";
         String password = "password";
-        UserAccount fixture = UserAccountFixture.get(email, password);
+        UserAccountEntity fixture = UserAccountFixture.get(email, password);
 
         //when
         when(userAccountRepository.findByEmail(email)).thenReturn(Optional.of(fixture));
@@ -150,7 +150,7 @@ public class AuthServiceTest {
         //given
         String email = "sbk8689@gmail.com";
         String password = "qwer1234!";
-        UserAccount fixture = UserAccountFixture.get(email, password);
+        UserAccountEntity fixture = UserAccountFixture.get(email, password);
 
         //when
         //mocking
@@ -166,7 +166,7 @@ public class AuthServiceTest {
         String email = "sbk8689@gmail.com";
         String password = "qwer1234!";
         String wrongPassword = "wrongPassword";
-        UserAccount fixture = UserAccountFixture.get(email, password);
+        UserAccountEntity fixture = UserAccountFixture.get(email, password);
 
         //when
         //mocking

@@ -2,7 +2,7 @@ package com.bokyoung.preorderservice.controller;
 
 import com.bokyoung.preorderservice.controller.request.UserLoginRequest;
 import com.bokyoung.preorderservice.exception.ErrorCode;
-import com.bokyoung.preorderservice.model.User;
+import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.controller.request.UserJoinRequest;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
 import com.bokyoung.preorderservice.service.AuthService;
@@ -48,7 +48,7 @@ public class AuthControllerTest {
         Boolean emailVerified = false;
 
         //when
-        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenReturn(mock(User.class));
+        when(authService.join(email, password, nickname, greeting, profile_image, emailVerified)).thenReturn(mock(UserAccount.class));
 
         //then
         mockMvc.perform(post("/api/auth/join")
