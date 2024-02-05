@@ -33,7 +33,7 @@ public class AuthService {
     @Value("${jwt.token.expired-time-ms}")
     private Long expiredTimeMs;
 
-    //TODO : implement
+    //TODO : implement file upload
     @Transactional
     public UserAccount join(String email, String password, String nickname, String greeting, String profile_image, Boolean emailVerified) {
         // 회원가입하려는 email로 회원가입된 user가 있는지

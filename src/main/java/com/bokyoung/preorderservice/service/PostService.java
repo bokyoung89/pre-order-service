@@ -2,10 +2,7 @@ package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
-import com.bokyoung.preorderservice.model.AlarmArgs;
-import com.bokyoung.preorderservice.model.AlarmType;
-import com.bokyoung.preorderservice.model.Comment;
-import com.bokyoung.preorderservice.model.Post;
+import com.bokyoung.preorderservice.model.*;
 import com.bokyoung.preorderservice.model.entity.LikePostEntity;
 import com.bokyoung.preorderservice.model.entity.PostEntity;
 import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
@@ -21,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +30,8 @@ public class PostService {
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
     private final LikeCommentRepository likeCommentRepository;
-    private final AlarmRepository alarmRepository;
+    private final NewsFeedRepository newsFeedRepository;
+    private final FollowRepository followRepository;
 
     @Transactional
     public void create(String title, String content, String email) {
@@ -70,6 +70,15 @@ public class PostService {
         return postRepository.findAll(pageable).map(Post::fromAccount);
     }
 
+    public Page<Post> follow(Pageable pageable, String email) {
+        //user find
+        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+
+        List<FollowEntity> followeeUsers = followRepository.findByFollower(userAccountEntity);
+
+        return postRepository.findAllByUserAccountInOrderByCreatedAtDesc(followeeUsers, pageable).map(Post::fromAccount);
+    }
+
     public Page<Post> my(String email, Pageable pageable) {
         //user find
         UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
@@ -89,19 +98,30 @@ public class PostService {
 
         //like save
         likePostRepository.save(LikePostEntity.of(userAccountEntity, postEntity));
-
-        alarmRepository.save(AlramEntity.of(postEntity.getUserAccount(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userAccountEntity.getId(), postEntity.getId())
-        ));
+        //내 글에 좋아요를 누르면 -> 뉴스피드 저장
+        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle())));
+        //TODO : implement
+//        //Get followers -> save news feed for each follower
+//        List<FollowEntity> followerEntities = followRepository.findByFollowee(userAccountEntity);
+//
+//        List<NewsFeedEntity> followerNewsFeeds = followerEntities.stream()
+//                .map(follow -> NewsFeedEntity.of(
+//                        follow.getFollower(), NewsFeedType.NEW_LIKE_ON_POST_FROM_FOLLOW, new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getUserAccount().getNickname())))
+//                .collect(Collectors.toList());
+//
+//        newsFeedRepository.saveAll(followerNewsFeeds);
     }
 
     @Transactional
-    public int postLikeCount(Long postId) {
+    public int postLikeCount(Long postId, String email) {
         PostEntity postEntity = getPostEntityOrException(postId);
+        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
 
         //count like
 //        List<LikePostEntity> likePostEntities = likePostRepository.findAllByPost(postEntity);
 //
 //        return likePostEntities.size();
+
         return likePostRepository.countByPost(postEntity);
     }
 
@@ -112,9 +132,11 @@ public class PostService {
 
         //comment save
         commentRepository.save(CommentEntity.of(userAccountEntity, postEntity, comment));
-
-        alarmRepository.save(AlramEntity.of(postEntity.getUserAccount(), AlarmType.NEW_COMMENT_ON_POST, new AlarmArgs(userAccountEntity.getId(), postEntity.getId())));
-
+        //나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
+        NewsFeedArgs newsFeedArgs = new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle());
+        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_COMMENT_ON_POST, newsFeedArgs));
+        //TODO : implement
+        //Get followers -> save news feed for each follower
     }
 
     @Transactional
@@ -129,8 +151,10 @@ public class PostService {
 
         //like save
         likeCommentRepository.save(LikeCommentEntity.of(userAccountEntity, commentEntity));
-
-        alarmRepository.save(AlramEntity.of(commentEntity.getUserAccount(), AlarmType.NEW_LIKE_ON_COMMENT, new AlarmArgs(userAccountEntity.getId(), commentEntity.getId())));
+        //내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
+        newsFeedRepository.save(NewsFeedEntity.of(commentEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(userAccountEntity.getNickname(), commentEntity.getUserAccount().getNickname())));
+        //TODO : implement
+        //Get followers -> save news feed for each follower
     }
 
     @Transactional
