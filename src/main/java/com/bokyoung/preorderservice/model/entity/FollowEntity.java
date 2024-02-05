@@ -1,12 +1,8 @@
 package com.bokyoung.preorderservice.model.entity;
 
-import com.bokyoung.preorderservice.model.AlarmArgs;
-import com.bokyoung.preorderservice.model.AlarmType;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Type;
 
 import java.sql.Timestamp;
 import java.time.Instant;

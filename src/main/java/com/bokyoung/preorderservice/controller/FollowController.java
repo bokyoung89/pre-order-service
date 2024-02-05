@@ -18,4 +18,11 @@ public class FollowController {
         followService.addFollow(followeeId, authentication.getName());
         return Response.success();
     }
+
+    //TODO : implement
+    @DeleteMapping("/{followeeId}")
+    public Response<Void> deleteFollow(@PathVariable(name="followeeId") Long followeeId, Authentication authentication){
+        followService.addFollow(followeeId, authentication.getName());
+        return Response.success();
+    }
 }

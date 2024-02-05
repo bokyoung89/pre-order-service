@@ -43,6 +43,12 @@ public class PostController {
     public Response<Page<PostResponse>> list(Pageable pageable) {
         return Response.success(postService.list(pageable).map(PostResponse::fromPost));
     }
+
+    @GetMapping("/follow")
+    public Response<Page<PostResponse>> follow(Pageable pageable, Authentication authentication) {
+        return Response.success(postService.follow(pageable, authentication.getName()).map(PostResponse::fromPost));
+    }
+
     @GetMapping("/my")
     public Response<Page<PostResponse>> my(Pageable pageable, Authentication authentication) {
         return Response.success(postService.my(authentication.getName(), pageable).map(PostResponse::fromPost));
@@ -56,7 +62,7 @@ public class PostController {
 
     @GetMapping("/{postId}/likes")
     public Response<Integer> postLikeCount(@PathVariable(name = "postId") Long postId, Authentication authentication) {
-        return Response.success(postService.postLikeCount(postId));
+        return Response.success(postService.postLikeCount(postId, authentication.getName()));
     }
 
     @PostMapping("/{postId}/comments")
