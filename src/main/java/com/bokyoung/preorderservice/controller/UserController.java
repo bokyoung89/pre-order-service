@@ -1,14 +1,10 @@
 package com.bokyoung.preorderservice.controller;
 
 import com.bokyoung.preorderservice.controller.request.UserUpdateRequest;
-import com.bokyoung.preorderservice.controller.response.NewsFeedResponse;
 import com.bokyoung.preorderservice.controller.response.Response;
 import com.bokyoung.preorderservice.controller.response.UserUpdateResponse;
 import com.bokyoung.preorderservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,11 +32,6 @@ public class UserController {
     @GetMapping("/{id}")
     public Response<Void> getProfile() {
         return Response.success();
-    }
-
-    @GetMapping("/newsFeed")
-    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, Authentication authentication) {
-        return Response.success(userService.newsFeedsList(authentication.getName(), pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 
 }

@@ -2,14 +2,11 @@ package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.preorderservice.exception.ErrorCode;
 import com.bokyoung.preorderservice.exception.PreOrderServiceException;
-import com.bokyoung.preorderservice.model.NewsFeed;
 import com.bokyoung.preorderservice.model.UserAccount;
 import com.bokyoung.preorderservice.model.entity.UserAccountEntity;
 import com.bokyoung.preorderservice.repository.NewsFeedRepository;
 import com.bokyoung.preorderservice.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,12 +43,5 @@ public class UserService {
 
         userAccountEntity = userAccountRepository.save(UserAccountEntity.of(password, nickName, greeting, profile_image));
         return userAccountEntity.getId();
-    }
-
-    public Page<NewsFeed> newsFeedsList(String email, Pageable pageable) {
-        UserAccountEntity userAccount = userAccountRepository.findByEmail(email).orElseThrow(() ->
-                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", email)));
-
-        return newsFeedRepository.findAllByUserAccount(userAccount, pageable).map(NewsFeed::fromEntity);
     }
 }
