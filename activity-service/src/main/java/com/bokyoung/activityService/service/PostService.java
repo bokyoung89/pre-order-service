@@ -1,10 +1,9 @@
 package com.bokyoung.activityService.service;
 
+import com.bokyoung.activityService.controller.response.UserAccountResponse;
 import com.bokyoung.activityService.exception.ErrorCode;
 import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.model.Comment;
-import com.bokyoung.activityService.model.NewsFeedArgs;
-import com.bokyoung.activityService.model.NewsFeedType;
 import com.bokyoung.activityService.model.Post;
 import com.bokyoung.activityService.model.entity.*;
 import com.bokyoung.activityService.repository.*;
@@ -21,25 +20,23 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserAccountRepository userAccountRepository;
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
     private final LikeCommentRepository likeCommentRepository;
-    private final NewsFeedRepository newsFeedRepository;
     private final FollowRepository followRepository;
 
     @Transactional
     public void create(String title, String content, String email) {
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
-        postRepository.save(PostEntity.of(title, content, userAccountEntity));
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
+        postRepository.save(PostEntity.of(title, content, userAccountResponse.getId()));
     }
 
     @Transactional
     public Post modify(String title, String content, String email, Long postId) {
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
         PostEntity postEntity = getPostEntityOrException(postId);
         //post permission
-        if (postEntity.getUserAccount() != userAccountEntity) {
+        if (postEntity.getUserId() != userAccountResponse.getId()) {
             throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", email, postId));
         }
 
@@ -51,10 +48,10 @@ public class PostService {
 
     @Transactional
     public void delete(String email, Long postId) {
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
         PostEntity postEntity = getPostEntityOrException(postId);
         //post permission
-        if (postEntity.getUserAccount() != userAccountEntity) {
+        if (postEntity.getUserId() != userAccountResponse.getId()) {
             throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", email, postId));
         }
 
@@ -67,34 +64,35 @@ public class PostService {
 
     public Page<Post> follow(Pageable pageable, String email) {
         //user find
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
-        List<FollowEntity> followeeUsers = followRepository.findByFollower(userAccountEntity);
+        List<FollowEntity> followeeUsers = followRepository.findByFollowerId(userAccountResponse.getId());
 
-        return postRepository.findAllByUserAccountInOrderByCreatedAtDesc(followeeUsers, pageable).map(Post::fromAccount);
+        return postRepository.findAllByUserIdInOrderByCreatedAtDesc(followeeUsers, pageable).map(Post::fromAccount);
     }
 
     public Page<Post> my(String email, Pageable pageable) {
         //user find
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
-        return postRepository.findAllByUserAccount(userAccountEntity, pageable).map(Post::fromAccount);
+        return postRepository.findAllByUserId(userAccountResponse.getId(), pageable).map(Post::fromAccount);
     }
 
     @Transactional
     public void postLike(Long postId, String email) {
         PostEntity postEntity = getPostEntityOrException(postId);
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
         //check like -> throw
-        likePostRepository.findByUserAccountAndPost(userAccountEntity, postEntity).ifPresent(it -> {
+        likePostRepository.findByUserIdAndPost(userAccountResponse.getId(), postEntity).ifPresent(it -> {
             throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_POST, String.format("userEmail %s already like post %d", email, postId));
         });
 
         //like save
-        likePostRepository.save(LikePostEntity.of(userAccountEntity, postEntity));
+        likePostRepository.save(LikePostEntity.of(userAccountResponse.getId(), postEntity));
+        //TODO : Implement the rest of the functionality
         //내 글에 좋아요를 누르면 -> 뉴스피드 저장
-        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle())));
+//        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle())));
         //TODO : implement
 //        //Get followers -> save news feed for each follower
 //        List<FollowEntity> followerEntities = followRepository.findByFollowee(userAccountEntity);
@@ -110,7 +108,7 @@ public class PostService {
     @Transactional
     public int postLikeCount(Long postId, String email) {
         PostEntity postEntity = getPostEntityOrException(postId);
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
         //count like
 //        List<LikePostEntity> likePostEntities = likePostRepository.findAllByPost(postEntity);
@@ -123,13 +121,14 @@ public class PostService {
     @Transactional
     public void comment(Long postId, String email, String comment) {
         PostEntity postEntity = getPostEntityOrException(postId);
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
         //comment save
-        commentRepository.save(CommentEntity.of(userAccountEntity, postEntity, comment));
+        commentRepository.save(CommentEntity.of(userAccountResponse.getId(), userAccountResponse.getNickName(), postEntity, comment));
+        //TODO : Implement the rest of the functionality
         //나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
-        NewsFeedArgs newsFeedArgs = new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle());
-        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_COMMENT_ON_POST, newsFeedArgs));
+//        NewsFeedArgs newsFeedArgs = new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle());
+//        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserAccount(), NewsFeedType.NEW_COMMENT_ON_POST, newsFeedArgs));
         //TODO : implement
         //Get followers -> save news feed for each follower
     }
@@ -137,17 +136,18 @@ public class PostService {
     @Transactional
     public void commentLike(Long commentId, String email) {
         CommentEntity commentEntity = getCommentEntityOrException(commentId);
-        UserAccountEntity userAccountEntity = getUserAccountEntityOrException(email);
+        UserAccountResponse userAccountResponse = getUserAccountEntityOrException(email);
 
         //check like -> throw
-        likeCommentRepository.findByUserAccountAndComment(userAccountEntity, commentEntity).ifPresent(it -> {
+        likeCommentRepository.findByUserIdAndComment(userAccountResponse.getId(), commentEntity).ifPresent(it -> {
             throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_COMMENT, String.format("userEmail %s already like comment %d", email, commentId));
         });
 
         //like save
-        likeCommentRepository.save(LikeCommentEntity.of(userAccountEntity, commentEntity));
+        likeCommentRepository.save(LikeCommentEntity.of(userAccountResponse.getId(), commentEntity));
+        //TODO : Implement the rest of the functionality
         //내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
-        newsFeedRepository.save(NewsFeedEntity.of(commentEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(userAccountEntity.getNickname(), commentEntity.getUserAccount().getNickname())));
+//        newsFeedRepository.save(NewsFeedEntity.of(commentEntity.getUserAccount(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(userAccountEntity.getNickname(), commentEntity.getUserAccount().getNickname())));
         //TODO : implement
         //Get followers -> save news feed for each follower
     }
@@ -175,9 +175,11 @@ public class PostService {
     }
 
     // user exist
-    private UserAccountEntity getUserAccountEntityOrException(String email) {
-        return userAccountRepository.findByEmail(email).orElseThrow(() ->
-                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
+    private UserAccountResponse getUserAccountEntityOrException(String email) {
+        //TODO: Implement the rest of the functionality
+        return null;
+//        return userAccountRepository.findByEmail(email).orElseThrow(() ->
+//                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
     }
 
     private CommentEntity getCommentEntityOrException(Long commentId) {

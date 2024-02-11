@@ -1,7 +1,5 @@
 package com.bokyoung.preorderservice.fixture;
 
-import com.bokyoung.activityService.model.entity.UserAccountEntity;
-
 public class UserAccountFixture {
 
     public static UserAccountEntity get(String email, String password) {

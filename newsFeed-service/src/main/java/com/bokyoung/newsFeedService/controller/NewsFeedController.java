@@ -2,7 +2,7 @@ package com.bokyoung.newsFeedService.controller;
 
 import com.bokyoung.newsFeedService.controller.response.NewsFeedResponse;
 import com.bokyoung.newsFeedService.controller.response.Response;
-import com.bokyoung.newsFeedService.model.UserAccount;
+import com.bokyoung.newsFeedService.controller.response.UserAccountResponse;
 import com.bokyoung.newsFeedService.service.NewsFeedService;
 import com.bokyoung.newsFeedService.util.ClassUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,11 @@ public class NewsFeedController {
 
     private final NewsFeedService newsFeedService;
 
+    //TODO: Implement the rest of the functionality
     @GetMapping
     public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, Authentication authentication) {
-        UserAccount userAccount = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), UserAccount.class);
-        return Response.success(newsFeedService.newsFeedsList(userAccount.getId(), pageable).map(NewsFeedResponse::fromNewsFeed));
+        return null;
+//        UserAccountResponse userAccountResponse = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), UserAccountResponse.class);
+//        return Response.success(newsFeedService.newsFeedsList(UserAccountResponse.getId(), pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 }
