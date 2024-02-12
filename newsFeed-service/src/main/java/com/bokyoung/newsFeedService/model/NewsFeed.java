@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class NewsFeed {
     private Long id;
-    private UserAccount userAccount;
+    private Long userId;
     private NewsFeedType newsFeedType;
     private NewsFeedArgs newsFeedArgs;
     private Timestamp createdAt;
@@ -19,7 +19,7 @@ public class NewsFeed {
     public static NewsFeed fromEntity(NewsFeedEntity entity) {
         return new NewsFeed(
                 entity.getId(),
-                UserAccount.fromEntity(entity.getUserAccount()),
+                entity.getUserId(),
                 entity.getNewsFeedType(),
                 entity.getNewsFeedArgs(),
                 entity.getCreatedAt(),
