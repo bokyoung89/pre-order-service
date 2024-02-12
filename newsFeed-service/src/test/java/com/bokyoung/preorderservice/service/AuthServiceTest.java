@@ -1,7 +1,10 @@
 package com.bokyoung.preorderservice.service;
 
 import com.bokyoung.newsFeedService.exception.PreOrderServiceException;
+import com.bokyoung.newsFeedService.service.AuthService;
 import com.bokyoung.preorderservice.fixture.UserAccountFixture;
+import com.bokyoung.newsFeedService.model.entity.UserAccountEntity;
+import com.bokyoung.newsFeedService.repository.UserAccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

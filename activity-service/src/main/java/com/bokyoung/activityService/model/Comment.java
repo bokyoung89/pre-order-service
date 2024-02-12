@@ -28,8 +28,8 @@ public class Comment {
         return new Comment(
                 entity.getId(),
                 entity.getComment(),
-                entity.getNickname(),
-                entity.getUserId(),
+                entity.getUserAccount().getNickname(),
+                entity.getPost().getId(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt(),
                 entity.getDeletedAt()

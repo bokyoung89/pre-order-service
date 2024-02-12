@@ -29,7 +29,9 @@ public class NewsFeedEntity {
     private Long id;
 
     // 알람을 받은 사람
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserAccountEntity userAccount;
 
     @Enumerated(EnumType.STRING)
     private NewsFeedType newsFeedType;
@@ -54,9 +56,9 @@ public class NewsFeedEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static NewsFeedEntity of(Long userId, NewsFeedType newsFeedType, NewsFeedArgs newsFeedArgs) {
+    public static NewsFeedEntity of(UserAccountEntity userEntity, NewsFeedType newsFeedType, NewsFeedArgs newsFeedArgs) {
         NewsFeedEntity entity = new NewsFeedEntity();
-        entity.setUserId(userId);
+        entity.setUserAccount(userEntity);
         entity.setNewsFeedType(newsFeedType);
         entity.setNewsFeedArgs(newsFeedArgs);
         return entity;

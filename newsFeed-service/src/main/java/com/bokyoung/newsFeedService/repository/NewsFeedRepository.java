@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NewsFeedRepository extends JpaRepository<NewsFeedEntity, Long> {
 
-    Page<NewsFeedEntity> findAllByUserId(Long userId, Pageable pageable);
+    Page<NewsFeedEntity> findAllByUserAccountId(Long userId, Pageable pageable);
 }

@@ -16,7 +16,7 @@ public class Post {
 
     private String content;
 
-    private Long userId;
+    private UserAccount userAccount;
 
     private Timestamp createdAt;
 
@@ -29,7 +29,7 @@ public class Post {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getUserId(),
+                UserAccount.fromEntity(entity.getUserAccount()),
                 entity.getCreatedAt(),
                 entity.getModifiedAt(),
                 entity.getDeletedAt()

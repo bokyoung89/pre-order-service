@@ -24,9 +24,13 @@ public class FollowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long followerId;
+    @ManyToOne
+    @JoinColumn(name = "follower_id")
+    private UserAccountEntity follower;
 
-    private Long followeeId;
+    @ManyToOne
+    @JoinColumn(name = "followee_id")
+    private UserAccountEntity followee;
 
     private Timestamp createdAt;
 
@@ -44,10 +48,10 @@ public class FollowEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static FollowEntity of(Long followerId, Long followeeId) {
+    public static FollowEntity of(UserAccountEntity follower, UserAccountEntity followee) {
         FollowEntity entity = new FollowEntity();
-        entity.setFollowerId(followerId);
-        entity.setFolloweeId(followeeId);
+        entity.setFollower(follower);
+        entity.setFollowee(followee);
 
         return entity;
     }

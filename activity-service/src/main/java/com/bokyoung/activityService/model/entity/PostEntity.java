@@ -1,6 +1,5 @@
 package com.bokyoung.activityService.model.entity;
 
-import com.bokyoung.activityService.controller.response.UserAccountResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -30,7 +29,9 @@ public class PostEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserAccountEntity userAccount;
 
     private Timestamp createdAt;
 
@@ -48,11 +49,11 @@ public class PostEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static PostEntity of(String title, String content, Long userId) {
+    public static PostEntity of(String title, String content, UserAccountEntity userEntity) {
         PostEntity entity = new PostEntity();
         entity.setTitle(title);
         entity.setContent(content);
-        entity.setUserId(userId);
+        entity.setUserAccount(userEntity);
         return entity;
     }
 

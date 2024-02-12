@@ -4,6 +4,7 @@ import com.bokyoung.userService.exception.ErrorCode;
 import com.bokyoung.userService.exception.PreOrderServiceException;
 import com.bokyoung.userService.model.UserAccount;
 import com.bokyoung.userService.model.entity.UserAccountEntity;
+import com.bokyoung.userService.repository.NewsFeedRepository;
 import com.bokyoung.userService.repository.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserAccountRepository userAccountRepository;
+    private final NewsFeedRepository newsFeedRepository;
 
     public UserAccount loadByUserByEmail(String email) {
         return userAccountRepository.findByEmail(email).map(UserAccount::fromEntity).orElseThrow(() ->
@@ -39,7 +41,7 @@ public class UserService {
             userAccountEntity.setProfile_image(profile_image);
         }
 
-        UserAccount.fromEntity(userAccountRepository.save(userAccountEntity));
+        userAccountEntity = userAccountRepository.save(UserAccountEntity.of(password, nickName, greeting, profile_image));
         return userAccountEntity.getId();
     }
 }

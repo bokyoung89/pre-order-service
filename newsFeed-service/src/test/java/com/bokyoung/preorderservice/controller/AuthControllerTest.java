@@ -1,7 +1,11 @@
 package com.bokyoung.preorderservice.controller;
 
+import com.bokyoung.newsFeedService.controller.request.UserLoginRequest;
 import com.bokyoung.newsFeedService.exception.ErrorCode;
+import com.bokyoung.newsFeedService.model.UserAccount;
+import com.bokyoung.newsFeedService.controller.request.UserJoinRequest;
 import com.bokyoung.newsFeedService.exception.PreOrderServiceException;
+import com.bokyoung.newsFeedService.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

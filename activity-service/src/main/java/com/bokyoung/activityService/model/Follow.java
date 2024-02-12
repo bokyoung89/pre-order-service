@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 public class Follow {
     private Long id;
 
-    private Long followerId;
+    private UserAccount follower;
 
-    private Long followeeId;
+    private UserAccount followee;
 
     private Timestamp createdAt;
 
@@ -24,8 +24,8 @@ public class Follow {
     public static Follow fromEntity(FollowEntity entity) {
         return new Follow(
                 entity.getId(),
-                entity.getFollowerId(),
-                entity.getFolloweeId(),
+                UserAccount.fromEntity(entity.getFollower()),
+                UserAccount.fromEntity(entity.getFollowee()),
                 entity.getCreatedAt(),
                 entity.getModifiedAt(),
                 entity.getDeletedAt()
