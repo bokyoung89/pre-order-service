@@ -7,9 +7,7 @@ import com.bokyoung.newsFeedService.util.ClassUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/newsFeed")
@@ -20,10 +18,8 @@ public class NewsFeedController {
 
     //TODO : 추후 api-gateway 인증 필터 구현해 인증된 사용자 정보 받을 것 (Long principalId)
     @GetMapping
-    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, Long principalId) {
+    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, @RequestHeader(name = "principalEmail") String principalEmail) {
         //TODO : Implement the rest of the functionality
-//        UserAccount userAccount = ClassUtils.getSafeCastInstance(principalId, UserAccount.class);
-//        return Response.success(newsFeedService.newsFeedsList(userAccount.getId(), pageable).map(NewsFeedResponse::fromNewsFeed));
-        return null;
+        return Response.success(newsFeedService.newsFeedsList(principalEmail, pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 }
