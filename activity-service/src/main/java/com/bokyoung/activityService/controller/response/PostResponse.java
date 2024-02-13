@@ -1,7 +1,6 @@
 package com.bokyoung.activityService.controller.response;
 
 import com.bokyoung.activityService.model.Post;
-import com.bokyoung.activityService.model.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,7 +16,7 @@ public class PostResponse {
 
     private String content;
 
-    private UserAccount userAccount;
+    private Long userId;
 
     private Timestamp createdAt;
 
@@ -30,7 +29,7 @@ public class PostResponse {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getUserAccount(),
+                post.getUserId(),
                 post.getCreatedAt(),
                 post.getModifiedAt(),
                 post.getDeletedAt()

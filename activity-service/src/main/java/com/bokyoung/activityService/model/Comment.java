@@ -14,7 +14,7 @@ public class Comment {
 
     private String comment;
 
-    private String nickName;
+//    private String nickName;
 
     private Long postId;
 
@@ -24,11 +24,12 @@ public class Comment {
 
     private Timestamp deletedAt;
 
+    //TODO : Implement the rest of the functionality
     public static Comment fromAccount(CommentEntity entity) {
         return new Comment(
                 entity.getId(),
                 entity.getComment(),
-                entity.getUserAccount().getNickname(),
+//                entity.getNickName(),
                 entity.getPost().getId(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt(),

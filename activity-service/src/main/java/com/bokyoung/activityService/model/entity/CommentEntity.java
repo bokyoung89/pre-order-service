@@ -28,9 +28,7 @@ public class CommentEntity {
     @JoinColumn(name = "post_id")
     private PostEntity post;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserAccountEntity userAccount;
+    private Long userId;
 
     @Column(name  = "comment")
     private String comment;
@@ -51,9 +49,9 @@ public class CommentEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static CommentEntity of(UserAccountEntity userEntity, PostEntity postEntity, String comment) {
+    public static CommentEntity of(Long userId, PostEntity postEntity, String comment) {
         CommentEntity entity = new CommentEntity();
-        entity.setUserAccount(userEntity);
+        entity.setUserId(userId);
         entity.setPost(postEntity);
         entity.setComment(comment);
         return entity;

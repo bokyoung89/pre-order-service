@@ -1,11 +1,7 @@
 package com.bokyoung.preorderservice.controller;
 
-import com.bokyoung.activityService.controller.request.UserLoginRequest;
 import com.bokyoung.activityService.exception.ErrorCode;
-import com.bokyoung.activityService.model.UserAccount;
-import com.bokyoung.activityService.controller.request.UserJoinRequest;
 import com.bokyoung.activityService.exception.PreOrderServiceException;
-import com.bokyoung.activityService.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

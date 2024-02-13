@@ -28,9 +28,7 @@ public class LikeCommentEntity {
     @JoinColumn(name = "comment_id")
     private CommentEntity comment;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserAccountEntity userAccount;
+    private Long userId;
 
     private Timestamp createdAt;
 
@@ -48,9 +46,9 @@ public class LikeCommentEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static LikeCommentEntity of(UserAccountEntity userEntity, CommentEntity commentEntity) {
+    public static LikeCommentEntity of(Long userId, CommentEntity commentEntity) {
         LikeCommentEntity entity = new LikeCommentEntity();
-        entity.setUserAccount(userEntity);
+        entity.setUserId(userId);
         entity.setComment(commentEntity);
         return entity;
     }

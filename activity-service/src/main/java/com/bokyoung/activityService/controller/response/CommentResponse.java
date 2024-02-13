@@ -14,7 +14,7 @@ public class CommentResponse {
 
     private String comment;
 
-    private String nickName;
+//    private String nickName;
 
     private Long postId;
 
@@ -28,7 +28,7 @@ public class CommentResponse {
         return new CommentResponse(
                 comment.getId(),
                 comment.getComment(),
-                comment.getNickName(),
+//                comment.getNickName(),
                 comment.getPostId(),
                 comment.getCreatedAt(),
                 comment.getModifiedAt(),
