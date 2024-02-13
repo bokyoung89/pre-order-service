@@ -3,4 +3,5 @@ include 'user-service'
 include 'activity-service'
 include 'newsFeed-service'
 include 'discovery-service'
+include 'api-gateway-service'
 

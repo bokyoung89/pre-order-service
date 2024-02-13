@@ -1,0 +1,93 @@
+server:
+  port: 8000
+
+spring:
+  profiles:
+    active: local #default
+    group:
+      local:
+        - common
+      prod:
+        - common
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
+# ...
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pre-order-service-mysql
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      routes:
+        # user-service
+        - id: user-service
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/api/users/**
+        - id: auth-service
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/api/auth/**
+        - id: file-service
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/api/file/**
+
+        # activity-service
+        - id: follow-service
+          uri: http://localhost:8081/
+          predicates:
+            - Path=/api/follow/**
+        - id: posts-service
+          uri: http://localhost:8081/
+          predicates:
+            - Path=/api/posts/**
+
+        # newsfeed-service
+        - id: newsFeed-service
+          uri: http://localhost:8082/
+          predicates:
+            - Path=/api/newsFeed/**
+  main:
+    web-application-type:
+      reactive
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
