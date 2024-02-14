@@ -3,6 +3,7 @@ package com.bokyoung.activityService.service;
 import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.exception.ErrorCode;
 import com.bokyoung.activityService.model.entity.FollowEntity;
+import com.bokyoung.activityService.model.entity.PostEntity;
 import com.bokyoung.activityService.repository.FollowRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,27 +16,19 @@ public class FollowService {
     private final FollowRepository followRepository;
 
     @Transactional
-    public void addFollow(Long followeeId, Long userId) {
-        //follower user find
-        //TODO : Implement the rest of the functionality
-        Long follower = null;
-//        userAccountRepository.findById(userId).orElseThrow(() ->
-//                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s not found", userId)));
-
+    public void addFollow(Long followee, Long follower) {
         // followee user find
-        //TODO : Implement the rest of the functionality
-        Long followee = null;
-//        userAccountRepository.findById(followeeId).orElseThrow(() ->
-//                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("User with id %d not found", followeeId)));
+        followRepository.findById(followee).orElseThrow(() ->
+                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("followee is not found", followee)));
 
         // Check if already following
         if (followRepository.existsByFollowerIdAndFolloweeId(follower, followee)) {
-            throw new PreOrderServiceException(ErrorCode.ALREADY_FOLLOW, String.format("%s is already following", followee));
+            throw new PreOrderServiceException(ErrorCode.ALREADY_FOLLOW, String.format("already following", followee));
         }
 
         //  Check if follow itself
         if (follower.equals(followee)) {
-            throw new PreOrderServiceException(ErrorCode.SELF_FOLLOWING, String.format("Cannot follow yourself", followee));
+            throw new PreOrderServiceException(ErrorCode.SELF_FOLLOWING, String.format("Cannot follow yourself", follower));
         }
 
         //add follow
@@ -47,5 +40,16 @@ public class FollowService {
         //newsFeedRepository.save(NewsFeedEntity.of(followEntity.getFollowee(), NewsFeedType.NEW_FOLLOW, new NewsFeedArgs(follower.getNickname(), followee.getNickname())));
         //TODO : implement
         //내 팔로우의 팔로우 소식 -> 뉴스피드 저장
+    }
+
+    @Transactional
+    public void cancelFollow(Long followeeId, Long followerId) {
+        // followee user find
+        FollowEntity followEntity = followRepository.findByFolloweeIdAndFollowerId(followeeId, followerId).orElseThrow(() ->
+                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("followee is not found", followeeId)));
+
+        System.out.println(followEntity.getId());
+        followRepository.delete(followEntity);
+
     }
 }

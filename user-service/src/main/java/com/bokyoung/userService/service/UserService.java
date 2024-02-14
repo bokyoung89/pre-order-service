@@ -40,7 +40,6 @@ public class UserService {
         }
 
         UserAccount.fromEntity(userAccountRepository.save(userAccountEntity));
-        //userAccountEntity = userAccountRepository.save(UserAccountEntity.of(password, nickName, greeting, profile_image));
         return userAccountEntity.getId();
     }
 }

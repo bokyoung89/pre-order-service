@@ -52,7 +52,7 @@ spring:
           predicates:
             - Path=/activity-service/**
           filters:
-            - AuthorizationFilter
+            - AuthorizationHeaderFilter
 
         # newsfeed-service
         - id: newsFeed-service
@@ -60,7 +60,7 @@ spring:
           predicates:
             - Path=/newsFeed-service/**
           filters:
-            - AuthorizationFilter
+            - AuthorizationHeaderFilter
 
   main:
     web-application-type:
@@ -78,6 +78,11 @@ management:
     web:
       exposure:
         include: "*"
+
+jwt:
+  secret-key: pre-order-service-2024.secret_key
+  # 30 days
+  token.expired-time-ms: 2592000000
 
 ---
 spring:

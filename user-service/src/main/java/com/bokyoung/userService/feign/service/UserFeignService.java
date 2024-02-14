@@ -13,8 +13,8 @@ public class UserFeignService {
 
     private final UserAccountRepository userAccountRepository;
 
-    public UserAccount getUserAccount(String email) {
-        return userAccountRepository.findByEmail(email).map(UserAccount::fromEntity).orElseThrow(() ->
-                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", email)));
+    public UserAccount getUserAccount(Long userId) {
+        return userAccountRepository.findById(userId).map(UserAccount::fromEntity).orElseThrow(() ->
+                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s is not founded", userId)));
     }
 }

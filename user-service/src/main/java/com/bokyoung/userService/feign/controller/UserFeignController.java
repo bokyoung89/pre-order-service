@@ -16,8 +16,8 @@ public class UserFeignController {
 
     @GetMapping("/userAccount")
     public Response<UserResponse> getUserAccount
-            (@RequestHeader(name = "principalEmail") String principalEmail) {
-        UserAccount userAccount = userFeignService.getUserAccount(principalEmail);
+            (@RequestHeader(name = "principalId") Long principalId) {
+        UserAccount userAccount = userFeignService.getUserAccount(principalId);
         return Response.success(UserResponse.fromUser(userAccount));
     }
 }

@@ -19,8 +19,8 @@ public class NewsFeedService {
     private final NewsFeedRepository newsFeedRepository;
     private final UserAccountFeignClient userAccountFeignClient;
 
-    public Page<NewsFeed> newsFeedsList(String email, Pageable pageable) {
-        Response<UserResponse> userResponse = userAccountFeignClient.getUserAccount(email);
+    public Page<NewsFeed> newsFeedsList(Long userId, Pageable pageable) {
+        Response<UserResponse> userResponse = userAccountFeignClient.getUserAccount(userId);
         return newsFeedRepository.findAllByUserId(userResponse.getResult().getId(), pageable).map(NewsFeed::fromEntity);
     }
 }

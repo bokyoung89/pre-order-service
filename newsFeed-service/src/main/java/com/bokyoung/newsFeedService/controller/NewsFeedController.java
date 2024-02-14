@@ -16,10 +16,9 @@ public class NewsFeedController {
 
     private final NewsFeedService newsFeedService;
 
-    //TODO : 추후 api-gateway 인증 필터 구현해 인증된 사용자 정보 받을 것 (Long principalId)
+    // TODO : implement
     @GetMapping
-    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, @RequestHeader(name = "principalEmail") String principalEmail) {
-        //TODO : Implement the rest of the functionality
-        return Response.success(newsFeedService.newsFeedsList(principalEmail, pageable).map(NewsFeedResponse::fromNewsFeed));
+    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, @RequestHeader(name = "principalId") Long principalId) {
+        return Response.success(newsFeedService.newsFeedsList(principalId, pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 }

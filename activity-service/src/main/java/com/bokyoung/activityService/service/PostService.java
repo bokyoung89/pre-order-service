@@ -25,18 +25,16 @@ public class PostService {
     private final FollowRepository followRepository;
 
     @Transactional
-    public void create(String title, String content, Long principalId) {
-//        Long userId = getUserIdOrException(principalId);
-        postRepository.save(PostEntity.of(title, content, principalId));
+    public void create(String title, String content, Long userId) {
+        postRepository.save(PostEntity.of(title, content, userId));
     }
 
     @Transactional
-    public Post modify(String title, String content, Long principalId, Long postId) {
-//        Long userId = getUserIdOrException(principalId);
-        PostEntity postEntity = getPostEntityOrException(principalId);
+    public Post modify(String title, String content, Long userId, Long postId) {
+        PostEntity postEntity = getPostEntityOrException(postId);
         //post permission
-        if (postEntity.getUserId() != principalId) {
-            throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", principalId, postId));
+        if (postEntity.getUserId() != userId) {
+            throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", userId, postId));
         }
 
         postEntity.setTitle(title);
@@ -46,12 +44,11 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long principalId, Long postId) {
-//        Long userId = getUserIdOrException(principalId);
+    public void delete(Long userId, Long postId) {
         PostEntity postEntity = getPostEntityOrException(postId);
         //post permission
-        if (postEntity.getUserId() != principalId) {
-            throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", principalId, postId));
+        if (postEntity.getUserId() != userId) {
+            throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission with %s", userId, postId));
         }
 
         postRepository.delete(postEntity);
@@ -61,34 +58,22 @@ public class PostService {
         return postRepository.findAll(pageable).map(Post::fromAccount);
     }
 
-    public Page<Post> follow(Pageable pageable, Long principalId) {
-        //user find
-//        Long userId = getUserIdOrException(principalId);
+    public Page<Post> my(Long userId, Pageable pageable) {
 
-        List<FollowEntity> followeeUsers = followRepository.findByFollowerId(principalId);
-
-        return postRepository.findAllByUserIdInOrderByCreatedAtDesc(followeeUsers, pageable).map(Post::fromAccount);
-    }
-
-    public Page<Post> my(Long principalId, Pageable pageable) {
-        //user find
-//        Long userId = getUserIdOrException(principalId);
-
-        return postRepository.findAllByUserId(principalId, pageable).map(Post::fromAccount);
+        return postRepository.findAllByUserId(userId, pageable).map(Post::fromAccount);
     }
 
     @Transactional
-    public void postLike(Long postId, Long principalId) {
+    public void postLike(Long postId, Long userId) {
         PostEntity postEntity = getPostEntityOrException(postId);
-//        Long userId = getUserIdOrException(principalId);
 
         //check like -> throw
-        likePostRepository.findByUserIdAndPost(principalId, postEntity).ifPresent(it -> {
-            throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_POST, String.format("userEmail %s already like post %d", principalId, postId));
+        likePostRepository.findByUserIdAndPost(userId, postEntity).ifPresent(it -> {
+            throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_POST, String.format("userEmail %s already like post %d", userId, postId));
         });
 
         //like save
-        likePostRepository.save(LikePostEntity.of(principalId, postEntity));
+        likePostRepository.save(LikePostEntity.of(userId, postEntity));
 
         /**
          * 내 글에 좋아요를 누르면 -> 뉴스피드 저장
@@ -109,9 +94,8 @@ public class PostService {
     }
 
     @Transactional
-    public int postLikeCount(Long postId, Long principalId) {
+    public int postLikeCount(Long postId, Long userId) {
         PostEntity postEntity = getPostEntityOrException(postId);
-//        Long userId = getUserIdOrException(principalId);
 
         //count like
 //        List<LikePostEntity> likePostEntities = likePostRepository.findAllByPost(postEntity);
@@ -122,12 +106,11 @@ public class PostService {
     }
 
     @Transactional
-    public void comment(Long postId, Long principalId, String comment) {
+    public void comment(Long postId, Long userId, String comment) {
         PostEntity postEntity = getPostEntityOrException(postId);
-//        Long userId = getUserIdOrException(principalId);
 
         //comment save
-        commentRepository.save(CommentEntity.of(principalId, postEntity, comment));
+        commentRepository.save(CommentEntity.of(userId, postEntity, comment));
 
         /**
          * 나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
@@ -140,17 +123,16 @@ public class PostService {
     }
 
     @Transactional
-    public void commentLike(Long commentId, Long principalId) {
+    public void commentLike(Long commentId, Long userId) {
         CommentEntity commentEntity = getCommentEntityOrException(commentId);
-//        Long userId = getUserIdOrException(principalId);
 
         //check like -> throw
-        likeCommentRepository.findByUserIdAndComment(principalId, commentEntity).ifPresent(it -> {
-            throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_COMMENT, String.format("userEmail %s already like comment %d", principalId, commentId));
+        likeCommentRepository.findByUserIdAndComment(userId, commentEntity).ifPresent(it -> {
+            throw new PreOrderServiceException(ErrorCode.ALREADY_LIKED_COMMENT, String.format("userEmail %s already like comment %d", userId, commentId));
         });
 
         //like save
-        likeCommentRepository.save(LikeCommentEntity.of(principalId, commentEntity));
+        likeCommentRepository.save(LikeCommentEntity.of(userId, commentEntity));
 
         /**
          * 내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
@@ -182,13 +164,6 @@ public class PostService {
         return postRepository.findById(postId).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.POST_NOT_FOUND, String.format("%s not founded", postId)));
     }
-
-    //TODO : USER 찾는 메소드. USER-SERVICE에 역할 이관
-    // user exist
-//    private Long getUserIdOrException(Long userId) {
-//        return userAccountRepository.findById(userId).orElseThrow(() ->
-//                new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", userId)));
-//    }
 
     private CommentEntity getCommentEntityOrException(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() ->
