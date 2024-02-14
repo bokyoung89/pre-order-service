@@ -29,10 +29,7 @@ public class AuthenticationConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/api/auth/join",
-                                "/api/auth/login",
-                                "/api/auth/checkCerfitication",
-                                "/file/upload",
+                                "/user-service/**",
                                 "/api/internal/**") // TODO: 외부 마이크로서비스와 feignClinet로 통신 정상 여부 확인하기 위한 임시 허용. API gateway 적용 후 삭제 필요
                         .permitAll()
                         .requestMatchers("/api/**").authenticated()

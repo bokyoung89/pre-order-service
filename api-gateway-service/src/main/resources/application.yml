@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8083
 
 spring:
   profiles:
@@ -42,41 +42,34 @@ spring:
       routes:
         # user-service
         - id: user-service
-          uri: http://localhost:8080/
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/api/users/**
-        - id: auth-service
-          uri: http://localhost:8080/
-          predicates:
-            - Path=/api/auth/**
-        - id: file-service
-          uri: http://localhost:8080/
-          predicates:
-            - Path=/api/file/**
+            - Path=/user-service/**
 
         # activity-service
-        - id: follow-service
-          uri: http://localhost:8081/
+        - id: activity-service
+          uri: lb://ACTIVITY-SERVICE
           predicates:
-            - Path=/api/follow/**
-        - id: posts-service
-          uri: http://localhost:8081/
-          predicates:
-            - Path=/api/posts/**
+            - Path=/activity-service/**
+          filters:
+            - AuthorizationFilter
 
         # newsfeed-service
         - id: newsFeed-service
-          uri: http://localhost:8082/
+          uri: lb://NEWSFEED-SERVICE
           predicates:
-            - Path=/api/newsFeed/**
+            - Path=/newsFeed-service/**
+          filters:
+            - AuthorizationFilter
+
   main:
     web-application-type:
       reactive
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
 
