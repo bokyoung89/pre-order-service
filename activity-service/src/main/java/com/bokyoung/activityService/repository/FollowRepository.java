@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface FollowRepository extends JpaRepository<FollowEntity, Long> {
 
-    boolean existsByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
+    boolean existsByFollowerIdAndFolloweeIdAndDeletedAtIsNull(Long followerId, Long followeeId);
 
     Optional<FollowEntity> findByFolloweeIdAndFollowerId(Long followerId, Long followeeId);
 
