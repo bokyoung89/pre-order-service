@@ -1,9 +1,6 @@
 package com.bokyoung.activityService.service;
 
-import com.bokyoung.activityService.client.NewsFeedArgs;
-import com.bokyoung.activityService.client.NewsFeedCreateRequest;
-import com.bokyoung.activityService.client.NewsFeedFeignClient;
-import com.bokyoung.activityService.client.NewsFeedType;
+import com.bokyoung.activityService.client.*;
 import com.bokyoung.activityService.exception.ErrorCode;
 import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.model.Comment;
@@ -25,10 +22,13 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final LikeCommentRepository likeCommentRepository;
     private final NewsFeedFeignClient newsFeedFeignClient;
+    private final UserAccountFeignClient userAccountFeignClient;
 
     @Transactional
     public void create(String title, String content, Long userId) {
         postRepository.save(PostEntity.of(title, content, userId));
+        
+        // TODO : 팔로우 사용자가 포스트를 작성하면 -> 뉴스피드 생성
     }
 
     @Transactional
@@ -77,12 +77,11 @@ public class PostService {
         //like save
         likePostRepository.save(LikePostEntity.of(userId, postEntity));
 
-        /**
-         * 내 글에 좋아요를 누르면 -> 뉴스피드 저장
-         */
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs("fromUser", null, postEntity.getTitle())));
+        //내 글에 좋아요를 누르면 -> 뉴스피드 저장
+        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())));
 
-        //TODO : implement
+        //TODO : 팔로우한 사용자가 좋아요를 누르면 -> 뉴스피드 저장
 //        //Get followers -> save news feed for each follower
 //        List<FollowEntity> followerEntities = followRepository.findByFollowee(userAccountEntity);
 //
@@ -113,13 +112,11 @@ public class PostService {
         //comment save
         commentRepository.save(CommentEntity.of(userId, postEntity, comment));
 
-        /**
-         * 나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
-         */
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, new NewsFeedArgs("fromuser", null, postEntity.getTitle())));
+        //나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
+        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())));
 
-        //TODO : implement
-        //Get followers -> save news feed for each follower
+        //TODO : 팔로우한 사용자가 댓글을 남기면 -> 뉴스피드 저장
     }
 
     @Transactional
@@ -134,12 +131,12 @@ public class PostService {
         //like save
         likeCommentRepository.save(LikeCommentEntity.of(userId, commentEntity));
 
-        /**
-         * 내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
-         */
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs("fromuser", "touser", null)));
-        //TODO : implement
-        //Get followers -> save news feed for each follower
+        //내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
+        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
+        String toUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(commentEntity.getUserId()).getResult().getNickname();
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(fromUserNickname, toUserNickname, null)));
+
+        //TODO : 팔로우한 사용자가 댓글을 좋아요 하면 -> 뉴스피드 저장
     }
 
     @Transactional
