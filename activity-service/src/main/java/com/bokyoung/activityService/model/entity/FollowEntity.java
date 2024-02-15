@@ -17,7 +17,7 @@ import java.time.Instant;
 })
 @EqualsAndHashCode(of = "id")
 @Entity
-@SQLDelete(sql = "UPDATE \"follow\" SET deleted_at = NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE follow SET deleted_at = NOW() WHERE id = ?")
 public class FollowEntity {
 
     @Id
@@ -48,7 +48,6 @@ public class FollowEntity {
         FollowEntity entity = new FollowEntity();
         entity.setFollowerId(followerId);
         entity.setFolloweeId(followeeId);
-
         return entity;
     }
 

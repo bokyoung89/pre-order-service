@@ -39,7 +39,7 @@ public class UserService {
             userAccountEntity.setProfile_image(profile_image);
         }
 
-        userAccountEntity = userAccountRepository.save(UserAccountEntity.of(password, nickName, greeting, profile_image));
+        UserAccount.fromEntity(userAccountRepository.save(userAccountEntity));
         return userAccountEntity.getId();
     }
 }

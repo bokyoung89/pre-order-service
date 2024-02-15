@@ -104,7 +104,7 @@ public class AuthService {
         }
 
         // 토큰 생성
-        String token = JwtTokenUtils.generateToken(email, secretKey, expiredTimeMs);
+        String token = JwtTokenUtils.generateToken(userAccountEntity.getId(), email, secretKey, expiredTimeMs);
 
         return token;
     }

@@ -1,5 +1,8 @@
 package com.bokyoung.newsFeedService.service;
 
+import com.bokyoung.newsFeedService.model.NewsFeedArgs;
+import com.bokyoung.newsFeedService.model.NewsFeedType;
+import com.bokyoung.newsFeedService.model.entity.NewsFeedEntity;
 import com.bokyoung.newsFeedService.repository.NewsFeedRepository;
 import com.bokyoung.newsFeedService.model.NewsFeed;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +18,9 @@ public class NewsFeedService {
 
     public Page<NewsFeed> newsFeedsList(Long userId, Pageable pageable) {
         return newsFeedRepository.findAllByUserId(userId, pageable).map(NewsFeed::fromEntity);
+    }
+
+    public void create(Long userId, NewsFeedArgs newsFeedArgs, NewsFeedType newsFeedType) {
+        newsFeedRepository.save(NewsFeedEntity.of(userId, newsFeedType, newsFeedArgs));
     }
 }

@@ -1,0 +1,91 @@
+server:
+  port: 8083
+
+spring:
+  profiles:
+    active: local #default
+    group:
+      local:
+        - common
+      prod:
+        - common
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
+# ...
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pre-order-service-mysql
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      routes:
+        # user-service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+
+        # activity-service
+        - id: activity-service
+          uri: lb://ACTIVITY-SERVICE
+          predicates:
+            - Path=/activity-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
+        # newsfeed-service
+        - id: newsFeed-service
+          uri: lb://NEWSFEED-SERVICE
+          predicates:
+            - Path=/newsFeed-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
+  main:
+    web-application-type:
+      reactive
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+jwt:
+  secret-key: pre-order-service-2024.secret_key
+  # 30 days
+  token.expired-time-ms: 2592000000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
