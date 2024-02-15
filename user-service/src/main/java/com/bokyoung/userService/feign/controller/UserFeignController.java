@@ -14,10 +14,15 @@ public class UserFeignController {
 
     private final UserFeignService userFeignService;
 
-    @GetMapping("/userAccount")
-    public Response<UserResponse> getUserAccount
-            (@RequestHeader(name = "principalId") Long principalId) {
+    @GetMapping("/userAccount/principal")
+    public Response<UserResponse> getUserAccountByPrincipalId(@RequestHeader(name = "principalId") Long principalId) {
         UserAccount userAccount = userFeignService.getUserAccount(principalId);
+        return Response.success(UserResponse.fromUser(userAccount));
+    }
+
+    @GetMapping("/userAccount/user")
+    public Response<UserResponse> getUserAccountByUserId(@RequestParam(name = "userId") Long userId) {
+        UserAccount userAccount = userFeignService.getUserAccount(userId);
         return Response.success(UserResponse.fromUser(userAccount));
     }
 }
