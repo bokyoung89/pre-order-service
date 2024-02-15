@@ -1,10 +1,8 @@
 package com.bokyoung.newsFeedService.service;
 
-import com.bokyoung.newsFeedService.client.UserAccountFeignClient;
-import com.bokyoung.newsFeedService.controller.response.Response;
-import com.bokyoung.newsFeedService.controller.response.UserResponse;
-import com.bokyoung.newsFeedService.exception.ErrorCode;
-import com.bokyoung.newsFeedService.exception.PreOrderServiceException;
+import com.bokyoung.newsFeedService.model.NewsFeedArgs;
+import com.bokyoung.newsFeedService.model.NewsFeedType;
+import com.bokyoung.newsFeedService.model.entity.NewsFeedEntity;
 import com.bokyoung.newsFeedService.repository.NewsFeedRepository;
 import com.bokyoung.newsFeedService.model.NewsFeed;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +15,12 @@ import org.springframework.stereotype.Service;
 public class NewsFeedService {
 
     private final NewsFeedRepository newsFeedRepository;
-    private final UserAccountFeignClient userAccountFeignClient;
 
     public Page<NewsFeed> newsFeedsList(Long userId, Pageable pageable) {
-        Response<UserResponse> userResponse = userAccountFeignClient.getUserAccount(userId);
-        return newsFeedRepository.findAllByUserId(userResponse.getResult().getId(), pageable).map(NewsFeed::fromEntity);
+        return newsFeedRepository.findAllByUserId(userId, pageable).map(NewsFeed::fromEntity);
+    }
+
+    public void create(Long userId, NewsFeedArgs newsFeedArgs, NewsFeedType newsFeedType) {
+        newsFeedRepository.save(NewsFeedEntity.of(userId, newsFeedType, newsFeedArgs));
     }
 }

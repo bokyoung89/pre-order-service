@@ -1,5 +1,9 @@
 package com.bokyoung.activityService.service;
 
+import com.bokyoung.activityService.client.NewsFeedArgs;
+import com.bokyoung.activityService.client.NewsFeedCreateRequest;
+import com.bokyoung.activityService.client.NewsFeedFeignClient;
+import com.bokyoung.activityService.client.NewsFeedType;
 import com.bokyoung.activityService.exception.ErrorCode;
 import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.model.Comment;
@@ -12,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @AllArgsConstructor
 public class PostService {
@@ -22,7 +24,7 @@ public class PostService {
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
     private final LikeCommentRepository likeCommentRepository;
-    private final FollowRepository followRepository;
+    private final NewsFeedFeignClient newsFeedFeignClient;
 
     @Transactional
     public void create(String title, String content, Long userId) {
@@ -77,9 +79,8 @@ public class PostService {
 
         /**
          * 내 글에 좋아요를 누르면 -> 뉴스피드 저장
-         * TODO : feign client로 호출한다.
          */
-//        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle())));
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs("fromUser", null, postEntity.getTitle())));
 
         //TODO : implement
 //        //Get followers -> save news feed for each follower
@@ -114,10 +115,9 @@ public class PostService {
 
         /**
          * 나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
-         * TODO : feign client로 호출한다.
          */
-//        NewsFeedArgs newsFeedArgs = new NewsFeedArgs(userAccountEntity.getNickname(), postEntity.getTitle());
-//        newsFeedRepository.save(NewsFeedEntity.of(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, newsFeedArgs));
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, new NewsFeedArgs("fromuser", null, postEntity.getTitle())));
+
         //TODO : implement
         //Get followers -> save news feed for each follower
     }
@@ -136,9 +136,8 @@ public class PostService {
 
         /**
          * 내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
-         * TODO : feign client로 호출한다.
          */
-//        newsFeedRepository.save(NewsFeedEntity.of(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(userAccountEntity.getNickname(), commentEntity.getUserAccount().getNickname())));
+        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs("fromuser", "touser", null)));
         //TODO : implement
         //Get followers -> save news feed for each follower
     }

@@ -64,6 +64,16 @@ file:
   path: C:\Users\sbk86\
   url: http://localhost:4000/file/
 
+feign:
+  url:
+    prefix: http://localhost:8082/
+  client:
+    config:
+      default:
+        connectTimeout: 1000
+      user-service:
+        connectTimeout: 1000
+
 eureka:
   instance:
     prefer-ip-address: true
