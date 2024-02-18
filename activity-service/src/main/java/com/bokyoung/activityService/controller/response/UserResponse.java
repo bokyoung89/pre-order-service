@@ -1,6 +1,5 @@
-package com.bokyoung.userService.controller.response;
+package com.bokyoung.activityService.controller.response;
 
-import com.bokyoung.userService.model.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,11 +7,13 @@ import lombok.Getter;
 @Getter
 public class UserResponse {
 
-    private Long Id;
+    private Long id;
+
     private String email;
+
     private String nickname;
 
-    public static UserResponse fromUser(UserAccount userAccount){
+    public static UserResponse fromUser(UserResponse userAccount) {
         return new UserResponse(
                 userAccount.getId(),
                 userAccount.getEmail(),
