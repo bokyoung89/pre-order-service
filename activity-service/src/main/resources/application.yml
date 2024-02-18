@@ -89,6 +89,22 @@ management:
       exposure:
         include: "*"
 
+resilience4j:
+  circuit breaker:
+    configs:
+      default:
+        failure-rate-threshold: 4
+        wait-duration-in-open-state: 1000ms
+        sliding-window-type: count_based
+        sliding-window-size: 2
+    instances:
+      FeignClientControllerCase1:
+        base-config: default
+  time limiter:
+    configs:
+      default:
+        timeout-duration: 4s
+
 ---
 spring:
   config:

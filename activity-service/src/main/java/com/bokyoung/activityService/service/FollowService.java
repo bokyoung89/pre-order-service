@@ -1,13 +1,15 @@
 package com.bokyoung.activityService.service;
 
 import com.bokyoung.activityService.client.*;
-import com.bokyoung.activityService.controller.response.Response;
-import com.bokyoung.activityService.controller.response.UserResponse;
-import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.exception.ErrorCode;
+import com.bokyoung.activityService.exception.PreOrderServiceException;
 import com.bokyoung.activityService.model.entity.FollowEntity;
 import com.bokyoung.activityService.repository.FollowRepository;
+import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.retry.RetryRegistry;
 import lombok.AllArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,10 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final NewsFeedFeignClient newsFeedFeignClient;
     private final UserAccountFeignClient userAccountFeignClient;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
+    private final RetryRegistry retryRegistry;
+
 
     @Transactional
     public void addFollow(Long followee, Long follower) {
@@ -36,10 +42,18 @@ public class FollowService {
         followRepository.save(followEntity);
 
         //나를 팔로우하는 소식 -> 뉴스피드 저장
-        String followerNickname = userAccountFeignClient.getUserAccountByPrincipalId(follower).getResult().getNickname();
-        String followeeNickname = userAccountFeignClient.getUserAccountByUserId(followee).getResult().getNickname();
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(followee, NewsFeedType.NEW_FOLLOW, new NewsFeedArgs(followerNickname, followeeNickname, null)));
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        Retry retry = retryRegistry.retry("retry");
+        String followerNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getFollowerNickname(follower)).apply(1), throwable -> "failure");
+        String followeeNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getFolloweeNickname(followee)).apply(1), throwable -> "failure");
+
+        circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(followee, NewsFeedType.NEW_FOLLOW, new NewsFeedArgs(followerNickname, followeeNickname, null)))).apply(1),
+                throwable -> "failure");
     }
+
 
     @Transactional
     public void cancelFollow(Long followeeId, Long followerId) {
@@ -48,5 +62,17 @@ public class FollowService {
                 new PreOrderServiceException(ErrorCode.USER_NOT_FOUND, String.format("followee is not found", followeeId)));
 
         followRepository.delete(followEntity);
+    }
+
+    private String getFollowerNickname(Long userId) {
+        return userAccountFeignClient.getUserAccountByPrincipalId(userId)
+                .getResult()
+                .getNickname();
+    }
+
+    private String getFolloweeNickname(Long userId) {
+        return userAccountFeignClient.getUserAccountByUserId(userId)
+                .getResult()
+                .getNickname();
     }
 }
