@@ -7,7 +7,11 @@ import com.bokyoung.activityService.model.Comment;
 import com.bokyoung.activityService.model.Post;
 import com.bokyoung.activityService.model.entity.*;
 import com.bokyoung.activityService.repository.*;
+import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.retry.RetryRegistry;
 import lombok.AllArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,9 @@ public class PostService {
     private final LikeCommentRepository likeCommentRepository;
     private final NewsFeedFeignClient newsFeedFeignClient;
     private final UserAccountFeignClient userAccountFeignClient;
+
+    private final CircuitBreakerFactory circuitBreakerFactory;
+    private final RetryRegistry retryRegistry;
 
     @Transactional
     public void create(String title, String content, Long userId) {
@@ -78,8 +85,14 @@ public class PostService {
         likePostRepository.save(LikePostEntity.of(userId, postEntity));
 
         //내 글에 좋아요를 누르면 -> 뉴스피드 저장
-        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())));
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        Retry retry = retryRegistry.retry("retry");
+        String fromUserNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getUserByPrincipalId(userId)).apply(1), throwable -> "failure");
+
+        circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())))).apply(1),
+                throwable -> "failure");
 
         //TODO : 팔로우한 사용자가 좋아요를 누르면 -> 뉴스피드 저장
 //        //Get followers -> save news feed for each follower
@@ -113,8 +126,14 @@ public class PostService {
         commentRepository.save(CommentEntity.of(userId, postEntity, comment));
 
         //나의 포스트에 남겨진 댓글 -> 뉴스피드 저장
-        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())));
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        Retry retry = retryRegistry.retry("retry");
+        String fromUserNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getUserByPrincipalId(userId)).apply(1), throwable -> "failure");
+
+        circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(postEntity.getUserId(), NewsFeedType.NEW_COMMENT_ON_POST, new NewsFeedArgs(fromUserNickname, null, postEntity.getTitle())))).apply(1),
+                throwable -> "failure");
 
         //TODO : 팔로우한 사용자가 댓글을 남기면 -> 뉴스피드 저장
     }
@@ -132,9 +151,16 @@ public class PostService {
         likeCommentRepository.save(LikeCommentEntity.of(userId, commentEntity));
 
         //내 댓글에 좋아요가 눌리면 -> 뉴스피드 저장
-        String fromUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(userId).getResult().getNickname();
-        String toUserNickname = userAccountFeignClient.getUserAccountByPrincipalId(commentEntity.getUserId()).getResult().getNickname();
-        newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(fromUserNickname, toUserNickname, null)));
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        Retry retry = retryRegistry.retry("retry");
+        String fromUserNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getUserByPrincipalId(userId)).apply(1), throwable -> "failure");
+        String toUserNickname = circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                getUserByCommentUserId(commentEntity.getUserId())).apply(1), throwable -> "failure");
+
+        circuitBreaker.run(() -> Retry.decorateFunction(retry, s ->
+                    newsFeedFeignClient.createNewsFeed(new NewsFeedCreateRequest(commentEntity.getUserId(), NewsFeedType.NEW_LIKE_ON_COMMENT, new NewsFeedArgs(fromUserNickname, toUserNickname, null)))).apply(1),
+                throwable -> "failure");
 
         //TODO : 팔로우한 사용자가 댓글을 좋아요 하면 -> 뉴스피드 저장
     }
@@ -164,5 +190,17 @@ public class PostService {
     private CommentEntity getCommentEntityOrException(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.COMMENT_NOT_FOUND, String.format("%s not founded", commentId)));
+    }
+
+    private String getUserByPrincipalId(Long userId) {
+        return userAccountFeignClient.getUserAccountByPrincipalId(userId)
+                .getResult()
+                .getNickname();
+    }
+
+    private String getUserByCommentUserId(Long userId) {
+        return userAccountFeignClient.getUserAccountByUserId(userId)
+                .getResult()
+                .getNickname();
     }
 }
