@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "user-service", url = "${feign.url.prefix}")
 public interface UserAccountFeignClient {
 
-    @GetMapping("/api/internal/userAccount")
-    Response<UserResponse> getUserAccount(@RequestHeader(name = "principalId") Long principalId);
+    @GetMapping("/api/internal/userAccount/principal")
+    Response<UserResponse> getUserAccountByPrincipalId(@RequestHeader(name = "principalId") Long principalId);
 }

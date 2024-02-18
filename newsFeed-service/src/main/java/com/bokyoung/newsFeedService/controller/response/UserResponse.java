@@ -10,10 +10,13 @@ public class UserResponse {
     private Long Id;
     private String email;
 
+    private String nickname;
+
     public static UserResponse fromUser(UserResponse userAccount){
         return new UserResponse(
                 userAccount.getId(),
-                userAccount.getEmail()
+                userAccount.getEmail(),
+                userAccount.getNickname()
         );
     }
 }
