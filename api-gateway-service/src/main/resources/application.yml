@@ -62,6 +62,14 @@ spring:
           filters:
             - AuthorizationHeaderFilter
 
+        # product-service
+        - id: product-service
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
   main:
     web-application-type:
       reactive
