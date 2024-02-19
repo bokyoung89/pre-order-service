@@ -1,4 +1,4 @@
-package com.bokyoung.Response;
+package com.bokyoung.productService.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
