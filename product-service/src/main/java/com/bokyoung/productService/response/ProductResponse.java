@@ -1,7 +1,6 @@
 package com.bokyoung.productService.response;
 
 import com.bokyoung.productService.model.Product;
-import com.bokyoung.productService.model.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -17,15 +16,12 @@ public class ProductResponse {
 
     private int price;
 
-    private String productType;
-
     public static ProductResponse fromProduct(Product product) {
         return new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getContent(),
-                product.getPrice(),
-                product.getProductType().getProductTypeText()
+                product.getPrice()
         );
     }
 }

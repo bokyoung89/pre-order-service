@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product-service")
+@RequestMapping("/product-service/products")
 @RequiredArgsConstructor
 public class ProductStockController {
 

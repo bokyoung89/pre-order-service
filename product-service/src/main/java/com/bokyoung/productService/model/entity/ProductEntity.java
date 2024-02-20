@@ -1,6 +1,5 @@
 package com.bokyoung.productService.model.entity;
 
-import com.bokyoung.productService.model.ProductType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -37,10 +36,6 @@ public class ProductEntity {
     @Column(nullable = false)
     private int price;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ProductType productType; //상품유형 (일반상품, 예약구매상품)
-
     private Timestamp createdAt;
 
     private Timestamp modifiedAt;
@@ -57,13 +52,12 @@ public class ProductEntity {
         this.modifiedAt = Timestamp.from(Instant.now());
     }
 
-    public static ProductEntity of(String name, Long userId, String content, int price, ProductType productType) {
+    public static ProductEntity of(String name, Long userId, String content, int price) {
         ProductEntity entity = new ProductEntity();
         entity.setName(name);
         entity.setUserId(userId);
         entity.setContent(content);
         entity.setPrice(price);
-        entity.setProductType(productType);
 
         return entity;
     }

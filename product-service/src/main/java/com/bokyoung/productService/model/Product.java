@@ -20,8 +20,6 @@ public class Product {
 
     private int price;
 
-    private ProductType productType;
-
     private Timestamp createdAt;
 
     private Timestamp modifiedAt;
@@ -35,7 +33,6 @@ public class Product {
                 entity.getName(),
                 entity.getContent(),
                 entity.getPrice(),
-                entity.getProductType(),
                 entity.getCreatedAt(),
                 entity.getModifiedAt(),
                 entity.getDeletedAt()
