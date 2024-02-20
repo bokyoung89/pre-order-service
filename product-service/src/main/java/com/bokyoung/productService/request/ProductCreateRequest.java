@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProductCreateRequest {
-
+    //상품 및 재고
     private String name;
 
     private String content;
@@ -15,6 +15,8 @@ public class ProductCreateRequest {
     private int price;
 
     private ProductType productType;
+
+    private Integer stockCount;
 
     public ProductCreateRequest() {
     }
