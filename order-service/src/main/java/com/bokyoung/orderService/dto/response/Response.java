@@ -1,4 +1,4 @@
-package com.bokyoung.orderService.response;
+package com.bokyoung.orderService.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
