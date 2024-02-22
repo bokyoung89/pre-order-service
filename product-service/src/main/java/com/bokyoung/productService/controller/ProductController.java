@@ -21,7 +21,7 @@ public class ProductController {
     @PostMapping
     public Response<Void> create(@RequestBody ProductCreateRequest request,
                                  @RequestHeader(name = "principalId") Long principalId) {
-        productService.create(request.getName(), principalId, request.getContent(), request.getPrice(), request.getStockCount());
+        productService.create(request.getName(), principalId, request.getContent(), request.getPrice(),  request.getProductType(), request.getStockCount());
         return Response.success();
     }
 
@@ -29,7 +29,7 @@ public class ProductController {
     public Response<ProductResponse> modify(@PathVariable(name = "productId") Long productId,
                                             @RequestBody ProductModifyRequest request,
                                             @RequestHeader(name = "principalId") Long principalId) {
-        Product product = productService.modify(request.getName(), request.getContent(), request.getPrice(), principalId, productId);
+        Product product = productService.modify(request.getName(), request.getContent(), request.getPrice(), request.getProductType(), principalId, productId);
         return Response.success(ProductResponse.fromProduct(product));
     }
 

@@ -1,5 +1,6 @@
 package com.bokyoung.productService.request;
 
+import com.bokyoung.productService.model.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,6 +13,8 @@ public class ProductCreateRequest {
     private String content;
 
     private int price;
+
+    private ProductType productType;
 
     private Integer stockCount;
 
