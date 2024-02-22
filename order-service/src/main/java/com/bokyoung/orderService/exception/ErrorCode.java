@@ -12,6 +12,8 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "Order not founded"),
     STOCK_NOT_FOUND(HttpStatus.NOT_FOUND, "Stock not founded"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "Permission is invalid"),
+
+    CHECK_QUANTITY(HttpStatus.BAD_REQUEST, "Quantity cannot be greater than stock")
     ;
 
     private HttpStatus status;

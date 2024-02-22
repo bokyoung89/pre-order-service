@@ -30,7 +30,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -43,6 +43,16 @@ logging:
     org:
       springframework:
         security: TRACE
+
+feign:
+  url:
+    prefix: http://localhost:8084/
+  client:
+    config:
+      default:
+        connectTimeout: 1000
+      user-service:
+        connectTimeout: 1000
 
 eureka:
   instance:
@@ -58,7 +68,6 @@ management:
     web:
       exposure:
         include: "*"
-
 ---
 spring:
   config:
