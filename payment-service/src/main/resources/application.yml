@@ -44,6 +44,16 @@ logging:
       springframework:
         security: TRACE
 
+feign:
+  url:
+    prefix: http://localhost:8085/
+  client:
+    config:
+      default:
+        connectTimeout: 1000
+      user-service:
+        connectTimeout: 1000
+
 eureka:
   instance:
     prefer-ip-address: true

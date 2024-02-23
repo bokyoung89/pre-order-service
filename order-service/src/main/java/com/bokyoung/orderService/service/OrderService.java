@@ -54,18 +54,18 @@ public class OrderService {
         //주문 취소
         orderRepository.delete(orderEntity);
 
-        // TODO : 취소수량만큼 재고 증가(product-service 메서드 feign 호출)
+        // 취소수량만큼 재고 증가(product-service 메서드 feign 호출)
         productFeignClient.addStockCount(orderEntity.getProductId(), orderEntity.getQuantity());
     }
 
     public Order OrderDetail(Long orderId) {
 
         //주문 존재 여부 체크
-        return orderRepository.findById(orderId).map(Order::fromOrder).orElseThrow(() ->
+        return orderRepository.findById(orderId).map(Order::fromEntity).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.ORDER_NOT_FOUND, String.format("order is not found")));
     }
 
     public Page<Order> OrderList(Pageable pageable, Long userId) {
-        return orderRepository.findAllByUserId(pageable, userId).map(Order::fromOrder);
+        return orderRepository.findAllByUserId(pageable, userId).map(Order::fromEntity);
     }
 }
