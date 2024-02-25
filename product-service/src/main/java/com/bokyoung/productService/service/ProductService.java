@@ -9,6 +9,7 @@ import com.bokyoung.productService.repository.ProductRepository;
 import com.bokyoung.productService.model.entity.ProductEntity;
 import com.bokyoung.productService.repository.ProductStockRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,6 @@ public class ProductService {
         if(productStockEntity.getStockCount() == 0) {
             throw new PreOrderServiceException(ErrorCode.STOCK_COUNT_IS_ZERO, String.format("StockCount is zero"));
         }
-        //재고 등록
         productStockRepository.save(productStockEntity);
     }
 
@@ -59,6 +59,7 @@ public class ProductService {
     }
 
     @Transactional
+    @CacheEvict(value = "productStock", key = "#productId")
     public void delete(Long userId, Long productId) {
         ProductEntity productEntity = getProductEntityOrException(productId);
         ProductStockEntity productStockEntity = getProductStockEntityOrException(productId);

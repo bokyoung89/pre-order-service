@@ -24,6 +24,10 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
   application:
     name: discovery-server
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 eureka:
   client:

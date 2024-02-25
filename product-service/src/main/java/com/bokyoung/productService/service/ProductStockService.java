@@ -7,6 +7,8 @@ import com.bokyoung.productService.model.SalesStatus;
 import com.bokyoung.productService.model.entity.ProductStockEntity;
 import com.bokyoung.productService.repository.ProductStockRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +19,16 @@ public class ProductStockService {
     private final ProductStockRepository productStockRepository;
 
     @Transactional
-    public ProductStock getStockCount(Long stockId) {
-        ProductStockEntity productStockEntity = getProductStockEntityOrException(stockId);
-        return ProductStock.fromEntity(productStockEntity);
+    @Cacheable(value = "productStock", key = "#productId")
+    public Integer getStockCount(Long productId) {
+        ProductStockEntity productStockEntity = getProductStockEntityOrException(productId);
+        return ProductStock.fromEntity(productStockEntity).getStockCount();
     }
 
     @Transactional
-    public ProductStock modify(Long stockId, Integer stockCount) {
-        ProductStockEntity productStockEntity = getProductStockEntityOrException(stockId);
+    @CachePut(value = "productStock", key = "#productId")
+    public Integer modify(Long productId, Integer stockCount) {
+        ProductStockEntity productStockEntity = getProductStockEntityOrException(productId);
 
         productStockEntity.setStockCount(stockCount);
 
@@ -34,11 +38,11 @@ public class ProductStockService {
             productStockEntity.setSalesStatus(SalesStatus.ON);
         }
 
-        return ProductStock.fromEntity(productStockRepository.save(productStockEntity));
+        return ProductStock.fromEntity(productStockEntity).getStockCount();
     }
 
-    private ProductStockEntity getProductStockEntityOrException(Long productStockId) {
-        return productStockRepository.findById(productStockId).orElseThrow(() ->
-                new PreOrderServiceException(ErrorCode.STOCK_NOT_FOUND, String.format("%s not founded", productStockId)));
+    private ProductStockEntity getProductStockEntityOrException(Long productId) {
+        return productStockRepository.findByProductId(productId).orElseThrow(() ->
+                new PreOrderServiceException(ErrorCode.STOCK_NOT_FOUND, String.format("%s not founded", productId)));
     }
 }

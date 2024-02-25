@@ -3,6 +3,7 @@ package com.bokyoung.productService.feign.controller;
 import com.bokyoung.productService.feign.service.InternalProductStockService;
 import com.bokyoung.productService.response.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +14,9 @@ public class InternalProductStockController {
     private final InternalProductStockService internalProductStockService;
 
     @GetMapping("/stocks/count")
-    public Integer getProductStockCount(@RequestParam Long productId) {
-        return internalProductStockService.getProductStockCount(productId);
+    public ResponseEntity<Integer> getProductStockCount(@RequestParam Long productId) {
+        Integer stockCount = internalProductStockService.getProductStockCount(productId);
+        return ResponseEntity.ok(stockCount);
     }
 
     @PostMapping("/stocks/remove")

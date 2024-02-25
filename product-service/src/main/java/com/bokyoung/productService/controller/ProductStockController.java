@@ -1,6 +1,5 @@
 package com.bokyoung.productService.controller;
 
-import com.bokyoung.productService.model.ProductStock;
 import com.bokyoung.productService.request.ProductStockModifyRequest;
 import com.bokyoung.productService.response.ProductStockResponse;
 import com.bokyoung.productService.response.Response;
@@ -15,16 +14,16 @@ public class ProductStockController {
 
     private final ProductStockService productStockService;
 
-    @GetMapping("/stocks/{stockId}")
-    public Response<ProductStockResponse> getStockCount(@PathVariable(name = "stockId") Long stockId) {
-        ProductStock productStock = productStockService.getStockCount(stockId);
-        return Response.success(ProductStockResponse.fromProductStock(productStock));
+    @GetMapping("/{productId}/stocks")
+    public Response<ProductStockResponse> getStockCount(@PathVariable(name = "productId") Long productId) {
+        Integer productCount = productStockService.getStockCount(productId);
+        return Response.success(ProductStockResponse.fromProductStock(productCount));
     }
 
-    @PutMapping("/stocks/{stockId}")
-    public Response<ProductStockResponse> modify(@PathVariable(name = "stockId") Long stockId,
-                                            @RequestBody ProductStockModifyRequest request) {
-        ProductStock productStock = productStockService.modify(stockId, request.getStockCount());
-        return Response.success(ProductStockResponse.fromProductStock(productStock));
+    @PutMapping("/{productId}/stocks")
+    public Response<ProductStockResponse> modify(@PathVariable(name = "productId") Long productId,
+                                                 @RequestBody ProductStockModifyRequest request) {
+        Integer productCount = productStockService.modify(productId, request.getStockCount());
+        return Response.success(ProductStockResponse.fromProductStock(productCount));
     }
 }
