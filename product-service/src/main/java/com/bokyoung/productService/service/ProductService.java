@@ -3,6 +3,7 @@ package com.bokyoung.productService.service;
 import com.bokyoung.productService.exception.ErrorCode;
 import com.bokyoung.productService.exception.PreOrderServiceException;
 import com.bokyoung.productService.model.Product;
+import com.bokyoung.productService.model.ProductType;
 import com.bokyoung.productService.model.entity.ProductStockEntity;
 import com.bokyoung.productService.repository.ProductRepository;
 import com.bokyoung.productService.model.entity.ProductEntity;
@@ -21,12 +22,12 @@ public class ProductService {
     private final ProductStockRepository productStockRepository;
 
     @Transactional
-    public void create(String name, Long userId, String content, int price, Integer stocksCount) {
+    public void create(String name, Long userId, String content, int price, ProductType productType, Integer stocksCount) {
         //상품 등록
-        ProductEntity productEntity = productRepository.save(ProductEntity.of(name, userId, content, price));
+        ProductEntity productEntity = productRepository.save(ProductEntity.of(name, userId, content, price, productType));
 
         //재고는 0보다 커야 한다.
-        ProductStockEntity productStockEntity = ProductStockEntity.of(productEntity.getId(), stocksCount);
+        ProductStockEntity productStockEntity = ProductStockEntity.of(productEntity.getId(), productType, stocksCount);
         if(productStockEntity.getStockCount() == 0) {
             throw new PreOrderServiceException(ErrorCode.STOCK_COUNT_IS_ZERO, String.format("StockCount is zero"));
         }
@@ -35,7 +36,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product modify(String name, String content, int price, Long userId, Long productId) {
+    public Product modify(String name, String content, int price, ProductType productType, Long userId, Long productId) {
         ProductEntity productEntity = getProductEntityOrException(productId);
 
         if (productEntity.getUserId() != userId) {
@@ -49,6 +50,10 @@ public class ProductService {
             productEntity.setContent(content);
         }
             productEntity.setPrice(price);
+
+        if (productType != null) {
+            productEntity.setProductType(productType);
+        }
 
         return Product.fromEntity(productRepository.save(productEntity));
     }
