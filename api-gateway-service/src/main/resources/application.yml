@@ -37,6 +37,10 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
   application:
     name: apigateway-service
+  data:
+    redis:
+      host: localhost
+      port: 6379
   cloud:
     gateway:
       routes:
@@ -83,6 +87,14 @@ spring:
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/payment-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
+        # stock-service
+        - id: stock-service
+          uri: lb://STOCK-SERVICE
+          predicates:
+            - Path=/stock-service/**
           filters:
             - AuthorizationHeaderFilter
 
