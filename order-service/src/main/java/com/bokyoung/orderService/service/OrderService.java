@@ -1,5 +1,6 @@
 package com.bokyoung.orderService.service;
 
+import com.bokyoung.orderService.client.ProductFeignClient;
 import com.bokyoung.orderService.exception.ErrorCode;
 import com.bokyoung.orderService.exception.PreOrderServiceException;
 import com.bokyoung.orderService.model.Order;
@@ -16,16 +17,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductFeignClient productFeignClient;
 
     @Transactional
     public void createOrder(Long productId, int quantity, String address, Long userId) {
-        // TODO : 재고 확인(product-service 메서드 feign 호출)
+        // 재고 확인
+        Integer stockCount = productFeignClient.getProductStockCount(productId);
+        if(stockCount == 0) {
+            throw new PreOrderServiceException(ErrorCode.STOCK_NOT_FOUND, String.format("재고가 없습니다."));
+        }
 
-        // TODO : 남은 재고 안에서만 주문 가능
+        // 남은 재고 안에서만 주문 가능 (주문수량은 재고보다 클 수 없다.)
+        if(stockCount < quantity) {
+            throw new PreOrderServiceException(ErrorCode.CHECK_QUANTITY);
+        }
+
         // 주문 생성
         orderRepository.save(OrderEntity.of(productId, userId, quantity, address));
 
         // TODO : 주문수량만큼 재고 감소(product-service 메서드 feign 호출)
+        productFeignClient.removeStockCount(productId, quantity);
     }
 
     @Transactional
@@ -40,9 +51,11 @@ public class OrderService {
             throw new PreOrderServiceException(ErrorCode.INVALID_PERMISSION, String.format("%s has no permission", userId));
         }
 
+        //주문 취소
         orderRepository.delete(orderEntity);
 
         // TODO : 취소수량만큼 재고 증가(product-service 메서드 feign 호출)
+        productFeignClient.addStockCount(orderEntity.getProductId(), orderEntity.getQuantity());
     }
 
     public Order OrderDetail(Long orderId) {
