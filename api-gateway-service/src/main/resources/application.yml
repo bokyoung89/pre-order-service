@@ -70,6 +70,14 @@ spring:
           filters:
             - AuthorizationHeaderFilter
 
+        # order-service
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
   main:
     web-application-type:
       reactive
