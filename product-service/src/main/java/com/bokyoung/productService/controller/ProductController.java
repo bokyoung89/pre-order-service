@@ -29,7 +29,7 @@ public class ProductController {
     public Response<ProductResponse> modify(@PathVariable(name = "productId") Long productId,
                                             @RequestBody ProductModifyRequest request,
                                             @RequestHeader(name = "principalId") Long principalId) {
-        Product product = productService.modify(request.getName(), request.getContent(), request.getPrice(), request.getProductType(), principalId, productId);
+        Product product = productService.modify(request.getName(), request.getContent(), request.getPrice(), request.getProductType(), request.getStockCount(), productId, principalId);
         return Response.success(ProductResponse.fromProduct(product));
     }
 

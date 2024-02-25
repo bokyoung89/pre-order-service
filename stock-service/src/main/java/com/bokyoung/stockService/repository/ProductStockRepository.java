@@ -1,6 +1,6 @@
-package com.bokyoung.productService.repository;
+package com.bokyoung.stockService.repository;
 
-import com.bokyoung.productService.model.entity.ProductStockEntity;
+import com.bokyoung.stockService.model.entity.ProductStockEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

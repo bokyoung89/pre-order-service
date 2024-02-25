@@ -1,4 +1,4 @@
-package com.bokyoung.productService.configuration;
+package com.bokyoung.stockService.configuration;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

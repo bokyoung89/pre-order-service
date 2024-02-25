@@ -1,6 +1,6 @@
-package com.bokyoung.productService.configuration;
+package com.bokyoung.stockService.configuration;
 
-import com.bokyoung.productService.model.ProductStock;
+import com.bokyoung.stockService.model.ProductStock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

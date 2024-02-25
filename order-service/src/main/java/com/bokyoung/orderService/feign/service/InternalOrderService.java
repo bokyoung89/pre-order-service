@@ -1,6 +1,6 @@
 package com.bokyoung.orderService.feign.service;
 
-import com.bokyoung.orderService.client.ProductFeignClient;
+import com.bokyoung.orderService.client.StockFeignClient;
 import com.bokyoung.orderService.exception.ErrorCode;
 import com.bokyoung.orderService.exception.PreOrderServiceException;
 import com.bokyoung.orderService.model.Order;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InternalOrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductFeignClient productFeignClient;
+    private final StockFeignClient productFeignClient;
 
     @Transactional
     public void updateStatusPayment(Long orderId) {
@@ -30,7 +30,7 @@ public class InternalOrderService {
     public void updateStatusCancelAddStock(Long orderId) {
         OrderEntity orderEntity = getOrderEntityOrException(orderId);
         //취소수량만큼 재고 증가(product-service 메서드 feign 호출)
-        productFeignClient.addStockCount(orderEntity.getProductId(), orderEntity.getQuantity());
+        productFeignClient.increaseStock(orderEntity.getProductId(), orderEntity.getQuantity());
         //주문 취소 처리
         orderRepository.delete(orderEntity);
     }

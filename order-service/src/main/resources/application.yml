@@ -50,7 +50,7 @@ logging:
 
 feign:
   url:
-    prefix: http://localhost:8084/
+    prefix: http://localhost:8087/
   client:
     config:
       default:

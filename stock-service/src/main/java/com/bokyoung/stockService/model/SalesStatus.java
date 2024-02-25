@@ -1,4 +1,4 @@
-package com.bokyoung.productService.model;
+package com.bokyoung.stockService.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

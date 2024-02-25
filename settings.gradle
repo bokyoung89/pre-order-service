@@ -7,4 +7,5 @@ include 'api-gateway-service'
 include 'product-service'
 include 'order-service'
 include 'payment-service'
+include 'stock-service'
 

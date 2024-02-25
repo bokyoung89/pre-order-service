@@ -90,6 +90,14 @@ spring:
           filters:
             - AuthorizationHeaderFilter
 
+        # stock-service
+        - id: stock-service
+          uri: lb://STOCK-SERVICE
+          predicates:
+            - Path=/stock-service/**
+          filters:
+            - AuthorizationHeaderFilter
+
   main:
     web-application-type:
       reactive

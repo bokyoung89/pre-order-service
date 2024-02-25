@@ -1,6 +1,6 @@
-package com.bokyoung.productService.model;
+package com.bokyoung.stockService.model;
 
-import com.bokyoung.productService.model.entity.ProductStockEntity;
+import com.bokyoung.stockService.model.entity.ProductStockEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

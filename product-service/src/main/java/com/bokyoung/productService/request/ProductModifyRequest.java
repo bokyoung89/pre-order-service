@@ -16,6 +16,8 @@ public class ProductModifyRequest {
 
     private ProductType productType;
 
+    private Integer stockCount;
+
     public ProductModifyRequest() {
     }
 }

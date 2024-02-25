@@ -1,6 +1,6 @@
-package com.bokyoung.productService.repository;
+package com.bokyoung.stockService.repository;
 
-import com.bokyoung.productService.model.ProductStock;
+import com.bokyoung.stockService.model.ProductStock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;

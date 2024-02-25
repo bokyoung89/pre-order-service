@@ -1,6 +1,6 @@
 package com.bokyoung.orderService.service;
 
-import com.bokyoung.orderService.client.ProductFeignClient;
+import com.bokyoung.orderService.client.StockFeignClient;
 import com.bokyoung.orderService.exception.ErrorCode;
 import com.bokyoung.orderService.exception.PreOrderServiceException;
 import com.bokyoung.orderService.model.Order;
@@ -17,12 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductFeignClient productFeignClient;
+    private final StockFeignClient productFeignClient;
 
     @Transactional
     public void createOrder(Long productId, int quantity, String address, Long userId) {
         // 재고 확인
-        Integer stockCount = productFeignClient.getProductStockCount(productId);
+        Integer stockCount = productFeignClient.getStock(productId);
         if(stockCount == 0) {
             throw new PreOrderServiceException(ErrorCode.STOCK_NOT_FOUND, String.format("재고가 없습니다."));
         }
@@ -36,7 +36,7 @@ public class OrderService {
         orderRepository.save(OrderEntity.of(productId, userId, quantity, address));
 
         // TODO : 주문수량만큼 재고 감소(product-service 메서드 feign 호출)
-        productFeignClient.removeStockCount(productId, quantity);
+        productFeignClient.reduceStock(productId, quantity);
     }
 
     @Transactional
@@ -55,7 +55,7 @@ public class OrderService {
         orderRepository.delete(orderEntity);
 
         // 취소수량만큼 재고 증가(product-service 메서드 feign 호출)
-        productFeignClient.addStockCount(orderEntity.getProductId(), orderEntity.getQuantity());
+        productFeignClient.increaseStock(orderEntity.getProductId(), orderEntity.getQuantity());
     }
 
     public Order OrderDetail(Long orderId) {

@@ -1,7 +1,7 @@
-package com.bokyoung.productService.model.entity;
+package com.bokyoung.stockService.model.entity;
 
-import com.bokyoung.productService.model.ProductType;
-import com.bokyoung.productService.model.SalesStatus;
+import com.bokyoung.stockService.model.ProductType;
+import com.bokyoung.stockService.model.SalesStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;

@@ -1,11 +1,11 @@
-package com.bokyoung.productService.service;
+package com.bokyoung.stockService.service;
 
-import com.bokyoung.productService.exception.ErrorCode;
-import com.bokyoung.productService.exception.PreOrderServiceException;
-import com.bokyoung.productService.model.ProductStock;
-import com.bokyoung.productService.model.SalesStatus;
-import com.bokyoung.productService.model.entity.ProductStockEntity;
-import com.bokyoung.productService.repository.ProductStockRepository;
+import com.bokyoung.stockService.exception.ErrorCode;
+import com.bokyoung.stockService.exception.PreOrderServiceException;
+import com.bokyoung.stockService.model.ProductStock;
+import com.bokyoung.stockService.model.SalesStatus;
+import com.bokyoung.stockService.model.entity.ProductStockEntity;
+import com.bokyoung.stockService.repository.ProductStockRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
