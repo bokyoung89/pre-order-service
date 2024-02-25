@@ -29,7 +29,7 @@ public class Order {
     private Timestamp deletedAt;
 
 
-    public static Order fromOrder(OrderEntity entity) {
+    public static Order fromEntity(OrderEntity entity) {
         return new Order(
                 entity.getId(),
                 entity.getProductId(),
