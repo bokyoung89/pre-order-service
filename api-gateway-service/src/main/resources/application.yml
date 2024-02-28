@@ -49,6 +49,8 @@ spring:
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*),/api/v1/$\{segment}
 
         # activity-service
         - id: activity-service
@@ -56,6 +58,7 @@ spring:
           predicates:
             - Path=/activity-service/**
           filters:
+            - RewritePath=/activity-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
 
         # newsfeed-service
@@ -64,7 +67,9 @@ spring:
           predicates:
             - Path=/newsFeed-service/**
           filters:
+            - RewritePath=/newsFeed-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
+
 
         # product-service
         - id: product-service
@@ -72,6 +77,7 @@ spring:
           predicates:
             - Path=/product-service/**
           filters:
+            - RewritePath=/product-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
 
         # order-service
@@ -80,6 +86,7 @@ spring:
           predicates:
             - Path=/order-service/**
           filters:
+            - RewritePath=/order-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
 
         # payment-service
@@ -88,6 +95,7 @@ spring:
           predicates:
             - Path=/payment-service/**
           filters:
+            - RewritePath=/payment-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
 
         # stock-service
@@ -96,6 +104,7 @@ spring:
           predicates:
             - Path=/stock-service/**
           filters:
+            - RewritePath=/stock-service/(?<segment>.*),/api/v1/$\{segment}
             - AuthorizationHeaderFilter
 
   main:

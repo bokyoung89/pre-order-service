@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/newsFeed-service/newsFeed")
+@RequestMapping("/api/v1/newsFeed")
 @RequiredArgsConstructor
 public class NewsFeedController {
 

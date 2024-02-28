@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/activity-service/follow")
+@RequestMapping("/api/v1/follow")
 @RequiredArgsConstructor
 public class FollowController {
 
