@@ -18,12 +18,12 @@ public class OrderController {
     private final OrderService orderService;
 
     /**
-     * 결제 진입 API : 구매하기 클릭 시 주문 생성
+     * 결제 진입 : 구매하기 클릭 시 주문 생성
      */
     @PostMapping
-    public Response<OrderResponse> createOrder(@RequestBody OrderCreateRequest request,
+    public Response<OrderResponse> create(@RequestBody OrderCreateRequest request,
                                  @RequestHeader(name = "principalId") Long principalId) {
-        Order order = orderService.createOrder(request.getProductId(), request.getQuantity(), request.getAddress(), principalId);
+        Order order = orderService.create(request.getProductId(), request.getQuantity(), request.getAddress(), principalId);
         return Response.success(OrderResponse.fromOrder(order));
     }
 
@@ -31,9 +31,9 @@ public class OrderController {
      * 주문 취소
      */
     @DeleteMapping("/{orderId}")
-    public Response<Void> cancelOrder(@PathVariable(name="orderId") Long orderId,
+    public Response<Void> cancel(@PathVariable(name="orderId") Long orderId,
                                  @RequestHeader(name = "principalId") Long principalId) {
-        orderService.cancelOrder(orderId, principalId);
+        orderService.cancel(orderId, principalId);
         return Response.success();
     }
 
@@ -41,8 +41,8 @@ public class OrderController {
      * 주문 단건(상세) 조회
      */
     @GetMapping("/{orderId}")
-    public Response<OrderResponse> OrderDetail(@PathVariable(name="orderId") Long orderId) {
-        Order order = orderService.OrderDetail(orderId);
+    public Response<OrderResponse> loadOrder(@PathVariable(name="orderId") Long orderId) {
+        Order order = orderService.loadOrder(orderId);
         return Response.success(OrderResponse.fromOrder(order));
     }
 
@@ -50,8 +50,8 @@ public class OrderController {
      * 주문 리스트 조회
      */
     @GetMapping
-    public Response<Page<OrderResponse>> OrderList(Pageable pageable,
+    public Response<Page<OrderResponse>> loadOrders(Pageable pageable,
                                                    @RequestHeader(name = "principalId") Long principalId) {
-        return Response.success(orderService.OrderList(pageable, principalId).map(OrderResponse::fromOrder));
+        return Response.success(orderService.loadOrders(pageable, principalId).map(OrderResponse::fromOrder));
     }
 }

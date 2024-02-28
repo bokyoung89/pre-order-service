@@ -15,9 +15,8 @@ public class NewsFeedController {
 
     private final NewsFeedService newsFeedService;
 
-    // TODO : implement
     @GetMapping
-    public Response<Page<NewsFeedResponse>> newsFeed(Pageable pageable, @RequestHeader(name = "principalId") Long principalId) {
-        return Response.success(newsFeedService.newsFeedsList(principalId, pageable).map(NewsFeedResponse::fromNewsFeed));
+    public Response<Page<NewsFeedResponse>> loadNewsFeed(Pageable pageable, @RequestHeader(name = "principalId") Long principalId) {
+        return Response.success(newsFeedService.loadNewsFeed(principalId, pageable).map(NewsFeedResponse::fromNewsFeed));
     }
 }

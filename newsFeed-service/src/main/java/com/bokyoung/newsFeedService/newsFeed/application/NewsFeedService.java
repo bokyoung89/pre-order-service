@@ -16,7 +16,7 @@ public class NewsFeedService {
 
     private final NewsFeedRepository newsFeedRepository;
 
-    public Page<NewsFeed> newsFeedsList(Long userId, Pageable pageable) {
+    public Page<NewsFeed> loadNewsFeed(Long userId, Pageable pageable) {
         return newsFeedRepository.findAllByUserId(userId, pageable).map(NewsFeed::fromEntity);
     }
 

@@ -20,7 +20,7 @@ public class OrderService {
     private final StockFeignClient productFeignClient;
 
     @Transactional
-    public Order createOrder(Long productId, int quantity, String address, Long userId) {
+    public Order create(Long productId, int quantity, String address, Long userId) {
         // 재고 확인
         Integer stockCount = productFeignClient.getStock(productId);
         if(stockCount == 0) {
@@ -41,7 +41,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void cancelOrder(Long orderId, Long userId) {
+    public void cancel(Long orderId, Long userId) {
 
         //주문 존재 여부 체크
         OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() ->
@@ -59,14 +59,14 @@ public class OrderService {
         productFeignClient.increaseStock(orderEntity.getProductId(), orderEntity.getQuantity());
     }
 
-    public Order OrderDetail(Long orderId) {
+    public Order loadOrder(Long orderId) {
 
         //주문 존재 여부 체크
         return orderRepository.findById(orderId).map(Order::fromEntity).orElseThrow(() ->
                 new PreOrderServiceException(ErrorCode.ORDER_NOT_FOUND, String.format("order is not found")));
     }
 
-    public Page<Order> OrderList(Pageable pageable, Long userId) {
+    public Page<Order> loadOrders(Pageable pageable, Long userId) {
         return orderRepository.findAllByUserId(pageable, userId).map(Order::fromEntity);
     }
 }

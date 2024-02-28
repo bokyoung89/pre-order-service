@@ -41,13 +41,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public Response<Page<ProductResponse>> list(Pageable pageable) {
-        return Response.success(productService.list(pageable).map(ProductResponse::fromProduct));
+    public Response<Page<ProductResponse>> loadProducts(Pageable pageable) {
+        return Response.success(productService.loadProducts(pageable).map(ProductResponse::fromProduct));
     }
 
     @GetMapping("/{productId}")
-    public Response<ProductResponse> details(@PathVariable(name = "productId") Long productId) {
-        Product product = productService.details(productId);
+    public Response<ProductResponse> loadProduct(@PathVariable(name = "productId") Long productId) {
+        Product product = productService.loadProduct(productId);
         return Response.success(ProductResponse.fromProduct(product));
     }
 }

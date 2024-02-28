@@ -71,11 +71,11 @@ public class ProductService {
         stockFeignClient.deleteStock(productId);
     }
 
-    public Page<Product> list(Pageable pageable) {
+    public Page<Product> loadProducts(Pageable pageable) {
         return productRepository.findAll(pageable).map(Product::fromEntity);
     }
 
-    public Product details(Long productId) {
+    public Product loadProduct(Long productId) {
         ProductEntity productEntity = getProductEntityOrException (productId);
         return Product.fromEntity(productEntity);
     }
