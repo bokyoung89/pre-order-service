@@ -1,6 +1,6 @@
 package com.bokyoung.stockService.global.config;
 
-import com.bokyoung.stockService.domain.model.ProductStock;
+import com.bokyoung.stockService.stock.domain.model.ProductStock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

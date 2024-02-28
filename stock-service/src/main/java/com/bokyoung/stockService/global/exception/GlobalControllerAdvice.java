@@ -1,6 +1,6 @@
 package com.bokyoung.stockService.global.exception;
 
-import com.bokyoung.stockService.dto.response.Response;
+import com.bokyoung.stockService.stock.dto.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,8 +2,8 @@ package com.bokyoung.userService.infra.feign.service;
 
 import com.bokyoung.userService.global.exception.ErrorCode;
 import com.bokyoung.userService.global.exception.PreOrderServiceException;
-import com.bokyoung.userService.domain.model.UserAccount;
-import com.bokyoung.userService.dao.repository.UserAccountRepository;
+import com.bokyoung.userService.user.domain.model.UserAccount;
+import com.bokyoung.userService.user.dao.UserAccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

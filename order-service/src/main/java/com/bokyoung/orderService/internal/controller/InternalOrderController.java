@@ -1,6 +1,6 @@
 package com.bokyoung.orderService.internal.controller;
 
-import com.bokyoung.orderService.dto.response.Response;
+import com.bokyoung.orderService.order.dto.response.Response;
 import com.bokyoung.orderService.internal.service.InternalOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

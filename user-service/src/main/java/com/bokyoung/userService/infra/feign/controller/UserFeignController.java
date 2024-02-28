@@ -1,9 +1,9 @@
 package com.bokyoung.userService.infra.feign.controller;
 
-import com.bokyoung.userService.dto.response.Response;
-import com.bokyoung.userService.dto.response.UserResponse;
+import com.bokyoung.userService.user.dto.response.Response;
+import com.bokyoung.userService.user.dto.response.UserResponse;
 import com.bokyoung.userService.infra.feign.service.UserFeignService;
-import com.bokyoung.userService.domain.model.UserAccount;
+import com.bokyoung.userService.user.domain.model.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,11 +2,11 @@ package com.bokyoung.stockService.internal.service;
 
 import com.bokyoung.stockService.global.exception.ErrorCode;
 import com.bokyoung.stockService.global.exception.PreOrderServiceException;
-import com.bokyoung.stockService.domain.model.ProductStock;
-import com.bokyoung.stockService.domain.model.ProductType;
-import com.bokyoung.stockService.domain.model.SalesStatus;
-import com.bokyoung.stockService.domain.entity.ProductStockEntity;
-import com.bokyoung.stockService.dao.repository.ProductStockRepository;
+import com.bokyoung.stockService.stock.domain.model.ProductStock;
+import com.bokyoung.stockService.stock.domain.model.ProductType;
+import com.bokyoung.stockService.stock.domain.model.SalesStatus;
+import com.bokyoung.stockService.stock.domain.entity.ProductStockEntity;
+import com.bokyoung.stockService.stock.dao.ProductStockRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

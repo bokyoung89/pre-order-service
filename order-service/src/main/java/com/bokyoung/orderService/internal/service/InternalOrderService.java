@@ -1,12 +1,12 @@
 package com.bokyoung.orderService.internal.service;
 
-import com.bokyoung.orderService.infra.feign.StockFeignClient;
+import com.bokyoung.orderService.infra.StockFeignClient;
 import com.bokyoung.orderService.global.exception.ErrorCode;
 import com.bokyoung.orderService.global.exception.PreOrderServiceException;
-import com.bokyoung.orderService.domain.model.Order;
-import com.bokyoung.orderService.domain.model.OrderStatus;
-import com.bokyoung.orderService.domain.entity.OrderEntity;
-import com.bokyoung.orderService.dao.repository.OrderRepository;
+import com.bokyoung.orderService.order.domain.model.Order;
+import com.bokyoung.orderService.order.domain.model.OrderStatus;
+import com.bokyoung.orderService.order.domain.entity.OrderEntity;
+import com.bokyoung.orderService.order.dao.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

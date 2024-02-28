@@ -1,6 +1,6 @@
 package com.bokyoung.userService.fixture;
 
-import com.bokyoung.userService.domain.entity.UserAccountEntity;
+import com.bokyoung.userService.user.domain.entity.UserAccountEntity;
 
 public class UserAccountFixture {
 

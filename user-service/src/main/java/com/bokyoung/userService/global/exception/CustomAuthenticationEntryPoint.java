@@ -1,6 +1,6 @@
 package com.bokyoung.userService.global.exception;
 
-import com.bokyoung.userService.dto.response.Response;
+import com.bokyoung.userService.user.dto.response.Response;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

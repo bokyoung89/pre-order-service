@@ -1,7 +1,7 @@
 package com.bokyoung.stockService.controller;
 
-import com.bokyoung.stockService.application.controller.StockController;
-import com.bokyoung.stockService.application.service.ProductStockService;
+import com.bokyoung.stockService.stock.controller.StockController;
+import com.bokyoung.stockService.stock.application.ProductStockService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

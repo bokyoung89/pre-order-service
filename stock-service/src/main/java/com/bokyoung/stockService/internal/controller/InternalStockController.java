@@ -1,8 +1,8 @@
 package com.bokyoung.stockService.internal.controller;
 
-import com.bokyoung.stockService.domain.model.ProductType;
-import com.bokyoung.stockService.dto.response.Response;
 import com.bokyoung.stockService.internal.service.InternalProductStockService;
+import com.bokyoung.stockService.stock.domain.model.ProductType;
+import com.bokyoung.stockService.stock.dto.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
