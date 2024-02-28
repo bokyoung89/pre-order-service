@@ -1,6 +1,6 @@
 package com.bokyoung.orderService.dto.response;
 
-import com.bokyoung.orderService.model.Order;
+import com.bokyoung.orderService.domain.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
