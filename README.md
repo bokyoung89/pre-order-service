@@ -1,59 +1,59 @@
-# pre-order-service
+# 소셜 미디어 기반의 예약 구매 서비스
+- 특정 시간에 상품을 구매할 수 있는 서비스로서 상품 등록, 주문, 결제 기능을 제공하며 대규모 트래픽 처리를 대비합니다.
 
-- 소셜 미디어 기반의 예약 구매 서비스로, 예약 구매 시 발생할 수 있는 대규모 트래픽을 처리한다.
+## 개발 기간
+- 총 4주(2024.01.24.~2024.02.22.)
 
-## 프로젝트 목표
-
-- 기본적인 유저 관리 기능을 포함한 소셜 미디어 서비스를 개발한다.
-    - 사용자는 회원가입, 로그인, 로그아웃 등의 기본적인 유저 관리 기능을 편리하게 이용할 수 있어야 한다.
-    - 소셜 미디어의 핵심 요소인 친구 관계, 포스트 작성, 댓글 등을 구현하여 사용자 간 상호 작용을 촉진한다.
-- 대규모 트래픽 처리 환경을 구축하여 성능최적화를 진행한다.
-- 개발된 서비스는 확장 가능하고 효율적으로 동작해야 한다.
-- 모든 기능은 **4주** 안에 완성하는 것을 목표로 한다.
+## 사용 기술
+- Language : JDK 11
+- Build Tool : Gradle
+- Library&Framework : Spring Boot, Spring Cloud, JWT
+- Database : MySQL, Redis
+- ORM : Hibernate
+- DevOps : Docker, Github
+- Testing Tools : JUnit, Artillery
 
 ## 프로젝트 시작하기
-* docker-compose 명령어
+* Start with Docker
 ```shell
 git clone https://github.com/bokyoung89/pre-order-service.git
 docker-compose -f docker-compose.yml up
 ```
 
-# 개발 기간
-
-- 총 4주(2024.01.24.~2024.02.22.)
-
-## 사용 기술
-
-- Docker / Docker Compose
-- Spring Boot
-- JDK 11
-- Gradle
-- JWT
-- HTTP Request / Response
-- Kafka
-- Hibernate
-- DB 미정
-- JUnit
-- Github
-
 ## 주요 기능
+* 예약 구매를 위한 상품 등록, 주문 생성, 결제 프로세스 기능
+* Redis Cache를 활용한 실시간 재고관리 서비스
+* JWT 토큰 생성 및 검증을 통한 로그인, 로그아웃 기능
+* JavaMailSender와 Gmail의 SMTP 서버를 활용한 이메일 인증 기능
+* 사용자의 뉴스피드 생성, 친구들의 포스트를 최신순으로 가져오는 기능
+* 포스트, 댓글 CRUD, 좋아요, 팔로우 등 유저 활동 서비스
 
-**[소셜 미디어]**
+## File Structure
+* MSA Module Structure
 
-- 유저 관리
-- 팔로우 관계
-- 포스트 및 뉴스피드
-- 댓글 및 상호 작용
+![msa_module_structure](./img/msa_module_structure.png)
 
-**[예약 구매]**
+* Module File Structure
 
-- Kafka 구축
-- 쇼핑몰 목업 구축
-- 상품 목록
-- 상품 상세
-- 주문 현황
-- 어드민(재고관리)
-- 결제 시뮬레이션
-- 주문 큐
-- 주문 처리
-- 배치 작업
+![module_file_structure](./img/module_file_structure.png)
+
+## API 명세서
+* [전체 API 명세서](https://sbk8689.gitbook.io/pre-order-service-api/)
+### (sample) 팔로우 API
+```json
+curl --location --request POST 'http://localhost:8083/activity-service/follow/2' \
+--header 'Authorization: Bearer token'
+```
+Response 200 
+```json
+{
+    "resultCode": "SUCCESS",
+    "result": null
+}
+```
+
+## 요구사항 구현 및 트러블 슈팅
+*  [전체 문서 링크](https://sbk8689.gitbook.io/pre-order-service/)
+* 주요 이슈
+  * [요구사항 구현] [프로젝트 DB 결정 - RDBMS 그리고 MySQL 선택 이유](https://sbk8689.gitbook.io/pre-order-service/)
+  * [트러블 슈팅] [API Gateway에 공통 인증 필터 구현으로 서비스 간 의존성 제거](https://sbk8689.gitbook.io/pre-order-service/)
