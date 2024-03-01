@@ -38,3 +38,5 @@ out/
 
 ###
 .env
+/ngrinder
+/user-service/src/main/resources/data.sql

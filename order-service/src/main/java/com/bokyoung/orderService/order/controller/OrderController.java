@@ -8,6 +8,7 @@ import com.bokyoung.orderService.order.application.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,10 +22,10 @@ public class OrderController {
      * 결제 진입 : 구매하기 클릭 시 주문 생성
      */
     @PostMapping
-    public Response<OrderResponse> create(@RequestBody OrderCreateRequest request,
+    public Long create(@RequestBody OrderCreateRequest request,
                                  @RequestHeader(name = "principalId") Long principalId) {
         Order order = orderService.create(request.getProductId(), request.getQuantity(), request.getAddress(), principalId);
-        return Response.success(OrderResponse.fromOrder(order));
+        return order.getId();
     }
 
     /**
